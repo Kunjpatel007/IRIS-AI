@@ -87,9 +87,7 @@ const TitleBar = () => {
         )}
       </div>
 
-      {/* Center: AI Identity */}
       <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 flex items-center gap-4 pointer-events-none">
-        {/* Voice Wave Animation */}
         <div className="flex items-end gap-1 h-5">
           {[1, 2, 3, 2].map((bar, i) => (
             <div
@@ -105,7 +103,6 @@ const TitleBar = () => {
           ))}
         </div>
 
-        {/* Title */}
         <div className="flex items-center gap-2.5">
           <span className="text-xs font-bold text-zinc-100 tracking-[0.3em] uppercase font-mono">
             IRIS
@@ -116,7 +113,6 @@ const TitleBar = () => {
           </span>
         </div>
 
-        {/* Status Orb */}
         <div className="relative flex items-center justify-center w-2.5 h-2.5">
           <span className="absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-30 animate-ping" />
           <span
@@ -126,7 +122,6 @@ const TitleBar = () => {
         </div>
       </div>
 
-      {/* Right: Window Controls */}
       {!isMac && (
         <div className="flex h-full no-drag z-50">
           <button
