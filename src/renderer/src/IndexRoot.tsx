@@ -76,12 +76,6 @@ const IndexRoot = () => {
     }
   }
 
-  const getNavStyle = (tabName: string) => {
-    return activeTab === tabName
-      ? 'text-white border-b border-white pb-1'
-      : 'text-zinc-500 hover:text-zinc-300 transition-colors'
-  }
-
   if (isOverlay) {
     return (
       <div className="w-screen h-screen overflow-hidden flex items-center justify-center bg-transparent">

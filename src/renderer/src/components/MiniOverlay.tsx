@@ -10,27 +10,24 @@ import {
 import { GiPowerButton } from 'react-icons/gi'
 import { irisService } from '@renderer/services/Iris-voice-ai'
 import { VisionMode } from '@renderer/IndexRoot'
+import { Status } from '@renderer/types/panel'
 
 interface OverlayProps {
-  isSystemActive: boolean
-  toggleSystem: () => void
-  isMicMuted: boolean
-  toggleMic: () => void
-  isVideoOn: boolean
-  visionMode: VisionMode
-  startVision: (mode: 'camera' | 'screen') => void
-  stopVision: () => void
+  isConnected: boolean
+  toggleConnection: () => void
+  systemStatus: Status
+  isSpeaking: boolean
+  isMuted: boolean
+  handleMicToggle: () => void
 }
 
 const MiniOverlay = ({
-  isSystemActive,
-  toggleSystem,
-  isMicMuted,
-  toggleMic,
-  isVideoOn,
-  visionMode,
-  startVision,
-  stopVision
+  isConnected,
+  toggleConnection,
+  systemStatus,
+  isSpeaking,
+  isMuted,
+  handleMicToggle
 }: OverlayProps) => {
   const [isTalking, setIsTalking] = useState(false)
   const analyzerRef = useRef<AnalyserNode | null>(null)
