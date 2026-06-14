@@ -51,12 +51,12 @@ export default function LoginPage() {
     show: { opacity: 1, transition: { staggerChildren: 0.1, delayChildren: 0.1 } }
   }
 
-  const cardVariants : any = {
+  const cardVariants: any = {
     hidden: { opacity: 0, y: 15 },
     show: { opacity: 1, y: 0, transition: { type: 'spring', stiffness: 300, damping: 30 } }
   }
 
-  const sidePanelVariants : any = {
+  const sidePanelVariants: any = {
     hidden: { opacity: 0, filter: 'blur(4px)' },
     show: { opacity: 1, filter: 'blur(0px)', transition: { duration: 0.6, ease: 'easeOut' } }
   }
@@ -126,7 +126,7 @@ export default function LoginPage() {
                 <div className="absolute inset-0 rounded-2xl bg-emerald-500/10 blur-md" />
                 <Cpu className="w-8 h-8 text-zinc-100 relative z-10" />
               </div>
-              <h1 className="text-3xl font-bold tracking-tight text-white mb-2">IRIS OS</h1>
+              <h1 className="text-3xl font-bold tracking-tight text-white mb-2">IRIS AI</h1>
               <p className="text-zinc-400 text-sm font-medium">Intelligent Local Workspace</p>
             </div>
 
