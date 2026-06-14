@@ -60,7 +60,12 @@ const IRIS = ({
           <div className="relative flex items-center justify-center h-8 w-8 rounded bg-emerald-500/10 border border-emerald-500/20 shadow-[0_0_10px_rgba(16,185,129,0.1)]">
             <RiShieldFlashLine className="text-emerald-500 text-lg animate-pulse" />
           </div>
-          <div className="flex flex-col leading-none">
+          <div
+            onClick={() => {
+              setActiveTab('DASHBOARD')
+            }}
+            className="flex flex-col leading-none cursor-pointer"
+          >
             <span className="font-black tracking-widest text-[13px] text-zinc-100 uppercase">
               IRIS AI
             </span>
