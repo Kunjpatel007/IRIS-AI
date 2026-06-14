@@ -3,10 +3,8 @@ import puppeteer from 'puppeteer-extra'
 import StealthPlugin from 'puppeteer-extra-plugin-stealth'
 import { load } from 'cheerio'
 
-// Initialize the stealth plugin at the module level
 puppeteer.use(StealthPlugin())
 
-// --- Internal Helpers ---
 
 const USER_BOOKMARKS: Record<string, string> = {
   instagram: 'https://instagram.com',
@@ -70,7 +68,6 @@ const getSmartUrl = (
   return null
 }
 
-// --- Exported Direct Function ---
 
 export async function executeWebSearch(query: string): Promise<string> {
   let browser: any = null
@@ -81,14 +78,12 @@ export async function executeWebSearch(query: string): Promise<string> {
       ? smartRoute.url
       : `https://www.google.com/search?q=${encodeURIComponent(query)}`
 
-    // Open the target in the user's default native browser instantly
     shell.openExternal(finalUrl)
 
     if (smartRoute && smartRoute.skipScrape) {
       return `I've opened ${smartRoute.source} for you.`
     }
 
-    // Launch headless Chromium to quietly scrape context
     browser = await puppeteer.launch({
       headless: true,
       args: ['--no-sandbox', '--disable-setuid-sandbox', '--disable-dev-shm-usage']
