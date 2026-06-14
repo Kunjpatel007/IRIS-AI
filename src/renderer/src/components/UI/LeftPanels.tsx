@@ -599,7 +599,7 @@ export default function LeftPanelsPremium({
                   showValue
                 />
               </div>
-              <span className="font-mono text-[8px] text-[#ec4899]/70 uppercase tracking-wider min-w-[1.5rem]">
+              <span className="font-mono text-[8px] text-[#ec4899]/70 uppercase tracking-wider min-w-6">
                 TX
               </span>
             </div>
@@ -616,7 +616,7 @@ export default function LeftPanelsPremium({
                   showValue
                 />
               </div>
-              <span className="font-mono text-[8px] text-[#3b82f6]/70 uppercase tracking-wider min-w-[1.5rem]">
+              <span className="font-mono text-[8px] text-[#3b82f6]/70 uppercase tracking-wider min-w-6">
                 RX
               </span>
             </div>
