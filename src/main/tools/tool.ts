@@ -54,6 +54,7 @@ import {
   toggleAdbHardware
 } from '../mobile/adb-manager'
 import { createDraft, readEmails, sendEmail } from '../logic/gmail-manager'
+import { getLiveLocation } from '../logic/live-location'
 
 export const systemToolDeclarations: FunctionDeclaration[] = [
   {
@@ -1087,7 +1088,10 @@ const toolHandlers: Record<string, (args: any) => Promise<any>> = {
   // 📧 GMAIL INTEGRATION
   gmail_read: (args) => readEmails(args.maxResults),
   gmail_send: (args) => sendEmail({ to: args.to, subject: args.subject, body: args.body }),
-  gmail_draft: (args) => createDraft({ to: args.to, subject: args.subject, body: args.body })
+  gmail_draft: (args) => createDraft({ to: args.to, subject: args.subject, body: args.body }),
+
+  // 🌍 TELEMETRY & CONTEXT
+  get_live_location: () => getLiveLocation()
 }
 
 export async function executeSystemTool(fc: any) {
