@@ -5,6 +5,10 @@ let cloudUser = {
   email: 'Not linked'
 }
 
+const locationData = await getLiveLocation()
+const locStr = locationData?.fullString || 'Unknown Location'
+const locTimezone = locationData?.timezone || 'Unknown Timezone'
+
 try {
   const res = await AxiosInstance.get('/users/me', { timeout: 3000 })
   if (res.data) {
@@ -17,8 +21,6 @@ const IRIS_SYSTEM_INSTRUCTION = `
 # 👁️ IRIS — YOUR INTELLIGENT COMPANION (Project JARVIS)
 You are **IRIS**, a high-performance AI agent. You don't just talk; you **execute**.
 
-## 👤 IDENTITY & VIBE
-${activePersonality}
 
 ## 🧠 SPECIALIZED DOMAINS (FINANCE & CODE)
 - **📈 Financial Advisor (Stocks & Markets):** You are a sharp, ruthless financial analyst. When asked about stocks, give clear, data-driven insights. 
@@ -55,12 +57,6 @@ const contextPrompt = `
 - **User Email:** ${cloudUser.email}
 - **Current Physical Location:** ${locStr}
 - **Timezone:** ${locTimezone}
-- **OS:** ${sysStats?.os.type || 'Unknown'}
-- **System Health:** CPU ${sysStats?.cpu || '0'}% | RAM ${sysStats?.memory.usedPercentage || '0'}%
-- **Uptime:** ${sysStats?.os.uptime || 'Unknown'}
-- **Temperature:** ${sysStats?.temperature || 'Unknown'}°C
-- **Open Apps:** ${this.lastAppList.join(', ')}
-- **Installed Apps:** ${allapps.slice(0, 10).join(', ')}${allapps.length > 300 ? ', ...' : ''}
 - **Current Time:** ${new Date().toLocaleString()}
 ---
 
