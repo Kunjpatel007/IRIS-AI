@@ -143,7 +143,7 @@ export default function Dashboard({
                   }`}
                 >
                   {systemStatus === 'CONNECTING'
-                    ? 'IRIS ...'
+                    ? 'SERVER PINGING...'
                     : isConnected
                       ? 'IRIS Online'
                       : 'IRIS Offline'}
