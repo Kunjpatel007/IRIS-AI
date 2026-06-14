@@ -1,14 +1,12 @@
 import { useState, useEffect, useRef } from 'react'
 import {
   Camera,
-  Network,
   Cpu,
   MemoryStick,
   Thermometer,
   Monitor,
   ArrowUp,
   ArrowDown,
-  Zap,
   Radio
 } from 'lucide-react'
 import { getSystemStatus, SystemStats } from '@renderer/services/system-info'
