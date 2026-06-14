@@ -75,10 +75,12 @@ const IRIS = (props: IrisProps) => {
       <div className="flex-1 overflow-hidden relative bg-[radial-gradient(circle_at_center,var(--tw-gradient-stops))] from-zinc-900/50 via-black to-black">
         <div className={`absolute inset-0 ${activeTab === 'DASHBOARD' ? 'block' : 'hidden'}`}>
           <DashboardView
-            props={props}
-            stats={stats}
-            chatHistory={chatHistory}
-            onVisionClick={handleVisionClick}
+            isConnected={isConnected}
+            toggleConnection={toggleConnection}
+            systemStatus={systemStatus}
+            isSpeaking={isSpeaking}
+            isMuted={isMuted}
+            handleMicToggle={handleMicToggle}
           />
         </div>
 
