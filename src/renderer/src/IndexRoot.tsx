@@ -48,10 +48,9 @@ const IndexRoot = () => {
     } else {
       // @ts-ignore
       window.iris.startSession()
-      setTimeout(() => {
-        setIsConnected(true)
-        setSystemStatus('CONNECTING')
-      }, 500)
+      setIsConnected(true)
+      setSystemStatus('CONNECTING')
+      setIsMuted(true)
     }
   }
 
