@@ -982,7 +982,6 @@ export const systemToolDeclarations: FunctionDeclaration[] = [
 ]
 
 const toolHandlers: Record<string, (args: any) => Promise<any>> = {
-  // 🌐 WEB, RESEARCH & GENERATION
   google_search: (args) => executeWebSearch(args.query),
   hack_live_website: (args) =>
     hackWebsite({ url: args.url, mode: args.mode, customText: args.custom_text }),
@@ -993,7 +992,6 @@ const toolHandlers: Record<string, (args: any) => Promise<any>> = {
   build_file: (args) =>
     startLiveCoding({ prompt: args.prompt, filename: args.file_name, geminiKey: args.geminiKey }),
 
-  // 💻 SYSTEM & OS CONTROL
   open_app: (args) => openApp(args.app_name), // FIX: Mapped correctly to app_name
   close_app: (args) => closeApp(args.app_name), // FIX: Mapped correctly to app_name
   get_running_apps: () => getRunningApps(),
@@ -1002,7 +1000,6 @@ const toolHandlers: Record<string, (args: any) => Promise<any>> = {
   deploy_wormhole: (args) => openWormhole(args.port),
   close_wormhole: () => closeWormhole(),
 
-  // 👻 GHOST AUTOMATION & UI INTERACTION
   ghost_type: (args) => executeGhostSequence([{ type: 'type', text: args.text }]),
   execute_sequence: (args): any => {
     try {
