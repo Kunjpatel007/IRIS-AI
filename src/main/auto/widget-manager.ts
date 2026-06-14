@@ -2,10 +2,8 @@ import { BrowserWindow, app } from 'electron'
 import path from 'path'
 import fs from 'fs/promises'
 
-// Maintain state at the module level
 let activeWidgets: BrowserWindow[] = []
 
-// Exported directly to create a widget
 export async function createWidget({ htmlCode, width, height }) {
   try {
     const widgetDir = path.join(app.getPath('userData'), 'DynamicWidgets')
@@ -71,7 +69,6 @@ export async function createWidget({ htmlCode, width, height }) {
   }
 }
 
-// Exported directly to clear all active widgets
 export async function closeAllWidgets() {
   try {
     if (activeWidgets.length === 0) {
