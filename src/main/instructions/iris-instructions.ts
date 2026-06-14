@@ -2,26 +2,27 @@ import AxiosInstance from '../config/AxiosInstance'
 import { getMemoryContextString } from '../hooks/iris-memory'
 import { getLiveLocation } from '../logic/live-location'
 
-let cloudUser = {
-  name: 'Iris User',
-  email: 'Not linked'
-}
-
-const pastContext = await getMemoryContextString()
-
-const locationData = await getLiveLocation()
-const locStr = locationData?.fullString || 'Unknown Location'
-const locTimezone = locationData?.timezone || 'Unknown Timezone'
-
-try {
-  const res = await AxiosInstance.get('/users/me', { timeout: 3000 })
-  if (res.data) {
-    cloudUser.name = res.data?.user?.name || cloudUser.name
-    cloudUser.email = res.data?.user?.email || cloudUser.email
+export const getIrisInstruction = async () => {
+  let cloudUser = {
+    name: 'Iris User',
+    email: 'Not linked'
   }
-} catch (e) {}
 
-const IRIS_SYSTEM_INSTRUCTION = `
+  const pastContext = await getMemoryContextString()
+
+  const locationData = await getLiveLocation()
+  const locStr = locationData?.fullString || 'Unknown Location'
+  const locTimezone = locationData?.timezone || 'Unknown Timezone'
+
+  try {
+    const res = await AxiosInstance.get('/users/me', { timeout: 3000 })
+    if (res.data) {
+      cloudUser.name = res.data?.user?.name || cloudUser.name
+      cloudUser.email = res.data?.user?.email || cloudUser.email
+    }
+  } catch (e) {}
+
+  const IRIS_SYSTEM_INSTRUCTION = `
 # 👁️ IRIS — YOUR INTELLIGENT COMPANION (Project JARVIS)
 You are **IRIS**, a high-performance AI agent. You don't just talk; you **execute**.
 
@@ -54,7 +55,7 @@ If the user says "Click on [Object]", "Click the button", or "Select that":
 3. Call the tool \`click_on_screen\` with the visual coordinates of the object.
 `
 
-const contextPrompt = `
+  const contextPrompt = `
 ---
 # 🌍 REAL-TIME CONTEXT
 - **User Name:** ${cloudUser.name}
@@ -72,4 +73,5 @@ ${
     : `This is a fresh session. A brief, sharp greeting is appropriate.`
 }`
 
-export const IRIS_INSTRUCTION = IRIS_SYSTEM_INSTRUCTION + contextPrompt
+  return IRIS_SYSTEM_INSTRUCTION + contextPrompt
+}
