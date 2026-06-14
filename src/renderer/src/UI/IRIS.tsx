@@ -8,8 +8,6 @@ import {
   RiSettings4Line,
   RiImageLine
 } from 'react-icons/ri'
-import { getSystemStatus } from '@renderer/services/system-info'
-import { getHistory } from '@renderer/services/iris-ai-brain'
 import ViewSkeleton from '@renderer/components/ViewSkelrton'
 
 import DashboardView from '../views/Dashboard'
