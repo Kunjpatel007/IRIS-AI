@@ -21,16 +21,6 @@ export type VisionMode = 'camera' | 'screen' | 'none'
 const IndexRoot = () => {
   const [isOverlay, setIsOverlay] = useState(false)
 
-  const [isSystemActive, setIsSystemActive] = useState(false)
-  const [isMicMuted, setIsMicMuted] = useState(true)
-
-  const [isVideoOn, setIsVideoOn] = useState(false)
-  const [visionMode, setVisionMode] = useState<VisionMode>('none')
-
-  const processingVideoRef = useRef<HTMLVideoElement>(document.createElement('video'))
-  const activeStreamRef = useRef<MediaStream | null>(null)
-  const aiIntervalRef = useRef<NodeJS.Timeout | null>(null)
-
   const [isBooting, setIsBooting] = useState(true)
   const [isConnected, setIsConnected] = useState(false)
   const [activeTab, setActiveTab] = useState('Dashboard')
