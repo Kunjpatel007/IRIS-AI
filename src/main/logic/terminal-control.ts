@@ -2,14 +2,12 @@ import { BrowserWindow } from 'electron'
 import { spawn } from 'child_process'
 import path from 'path'
 
-// Internal helper to ensure safe pathing
 const sanitizePath = (inputPath: string) => {
   let clean = path.normalize(inputPath)
   if (clean.endsWith(path.sep)) clean = clean.slice(0, -1)
   return clean
 }
 
-// Exported directly to execute PowerShell commands and stream output
 export async function runShellCommand({
   command,
   cwd
@@ -20,7 +18,6 @@ export async function runShellCommand({
   return new Promise((resolve) => {
     const safeCwd = cwd ? sanitizePath(cwd) : undefined
 
-    // Grab the main window to stream terminal output directly to the UI
     const win = BrowserWindow.getAllWindows()[0]
 
     const child = spawn('powershell.exe', ['-Command', command], {
