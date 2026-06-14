@@ -19,7 +19,6 @@ import ViewSkeleton from '@renderer/components/ViewSkelrton'
 
 import DashboardView from '../views/Dashboard'
 import PhoneView from '../views/Phone'
-import { VisionMode } from '@renderer/IndexRoot'
 import { Status } from '@renderer/types/panel'
 
 // const AppsView = lazy(() => import('../views/APP'))
