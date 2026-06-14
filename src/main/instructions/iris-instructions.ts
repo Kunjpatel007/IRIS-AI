@@ -1,3 +1,5 @@
+import AxiosInstance from '../config/AxiosInstance'
+
 let cloudUser = {
   name: 'Iris User',
   email: 'Not linked'
