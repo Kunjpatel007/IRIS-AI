@@ -40,7 +40,6 @@ const irisAPI = {
   }
 }
 
-
 if (process.contextIsolated) {
   try {
     contextBridge.exposeInMainWorld('electron', {
@@ -51,8 +50,7 @@ if (process.contextIsolated) {
       }
     })
     contextBridge.exposeInMainWorld('api', api)
-  } catch (error) {
-  }
+  } catch (error) {}
 } else {
   // @ts-ignore (define in dts)
   window.electron = {
@@ -65,4 +63,3 @@ if (process.contextIsolated) {
   // @ts-ignore (define in dts)
   window.api = api
 }
-
