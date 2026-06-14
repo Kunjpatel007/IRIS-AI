@@ -24,7 +24,7 @@ function getHealthColor(value: number, type: 'cpu' | 'ram' | 'temp') {
   const lightness = 50
   const mainColor = `hsl(${hue}, ${saturation}%, ${lightness}%)`
   const darkColor = `hsl(${hue}, ${saturation}%, 15%)`
-  const linear = `linear-gradient(90deg, ${darkColor}, ${mainColor})`
+  const linear = `linear-linear(90deg, ${darkColor}, ${mainColor})`
   const glow = mainColor
   return { linear, glow }
 }
@@ -103,7 +103,7 @@ function PremiumGlassPanel({
 
   return (
     <div
-      className={`group relative overflow-hidden rounded-2xl bg-gradient-to-br ${config.bg} backdrop-blur-3xl border ${config.border} shadow-xl transition-all duration-300 ${
+      className={`group relative overflow-hidden rounded-2xl bg-linear-to-br ${config.bg} backdrop-blur-3xl border ${config.border} shadow-xl transition-all duration-300 ${
         glow ? 'hover:shadow-2xl' : ''
       } ${className}`}
       style={
@@ -115,7 +115,7 @@ function PremiumGlassPanel({
       }
     >
       {/* Top accent line */}
-      <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/10 to-transparent z-0" />
+      <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-linear-to-r from-transparent via-white/10 to-transparent z-0" />
 
       {/* Ambient glow background */}
       <div
@@ -170,14 +170,14 @@ function NeonProgressBar({
         <div
           className="absolute inset-0 rounded-full opacity-40"
           style={{
-            background: `linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.3) 50%, transparent 100%)`,
+            background: `linear-linear(90deg, transparent 0%, rgba(255,255,255,0.3) 50%, transparent 100%)`,
             animation: 'shimmer 3s infinite',
             backgroundSize: '200% 100%'
           }}
         />
       </div>
       {showValue && (
-        <span className="font-mono text-xs font-semibold text-white/70 min-w-[2.5rem] text-right">
+        <span className="font-mono text-xs font-semibold text-white/70 min-w-10 text-right">
           {Math.round(safeValue)}%
         </span>
       )}
@@ -449,7 +449,7 @@ export default function LeftPanelsPremium({
           </div>
 
           {/* Video Feed */}
-          <div className="relative flex aspect-video w-full items-center justify-center overflow-hidden rounded-xl border border-white/8 bg-gradient-to-br from-black/60 to-black/40 flex-1">
+          <div className="relative flex aspect-video w-full items-center justify-center overflow-hidden rounded-xl border border-white/8 bg-linear-to-br from-black/60 to-black/40 flex-1">
             <video
               ref={videoRef}
               autoPlay
@@ -516,7 +516,7 @@ export default function LeftPanelsPremium({
             {/* Scanline overlay */}
             {isActive && (
               <div
-                className="pointer-events-none absolute left-0 right-0 h-px bg-gradient-to-r from-transparent via-[#00ff88]/30 to-transparent z-30"
+                className="pointer-events-none absolute left-0 right-0 h-px bg-linear-to-r from-transparent via-[#00ff88]/30 to-transparent z-30"
                 style={{ animation: 'scanline 3s ease-in-out infinite' }}
               />
             )}
