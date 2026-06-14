@@ -392,7 +392,7 @@ function Editor() {
     <div className="flex h-full w-full bg-[#050505] relative overflow-hidden font-sans">
       {/* --- SIDEBAR: MODULE LIBRARY --- */}
       <div
-        className={`h-full bg-zinc-950/80 backdrop-blur-2xl border-r border-white/[0.05] flex flex-col transition-all duration-300 ease-in-out z-40 shrink-0 ${
+        className={`h-full bg-zinc-950/80 backdrop-blur-2xl border-r border-white/5 flex flex-col transition-all duration-300 ease-in-out z-40 shrink-0 ${
           isSidebarOpen ? 'w-72' : 'w-0 overflow-hidden border-none'
         }`}
       >
