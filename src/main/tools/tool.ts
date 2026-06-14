@@ -1017,7 +1017,6 @@ const toolHandlers: Record<string, (args: any) => Promise<any>> = {
   copy_file_to_clipboard: (args) => copyFileToClipboard(args.filePath),
   get_screen_size: () => getScreenSize(),
 
-  // 📁 FILE SYSTEM OPERATIONS
   read_directory: (args) => readDirectory(args.directory_path),
   read_file: (args) => readFile(args.file_path),
   write_file: (args) => writeFile({ fileName: args.file_name, content: args.content }),
@@ -1031,7 +1030,6 @@ const toolHandlers: Record<string, (args: any) => Promise<any>> = {
   reveal_file: (args) => revealFile(args.filePath),
   open_in_vscode: (args) => openInVsCode(args.file_path || ''),
 
-  // 🧠 NEURAL ENGINE & ORACLE
   index_Folder: (args) => indexFolder(args.folder_path),
   smart_file_search: (args) => searchFiles({ query: args.query, groqKey: args.groqKey }),
   ingest_codebase: (args) => ingestCodebase({ dirPath: args.dirPath, geminiKey: args.geminiKey }),
@@ -1039,7 +1037,6 @@ const toolHandlers: Record<string, (args: any) => Promise<any>> = {
     consultOracle({ query: args.query, geminiKey: args.geminiKey, groqKey: args.groqKey }),
   cancel_ingestion: () => cancelIngestion(),
 
-  // 💾 MEMORY, NOTES & WORKFLOWS
   save_core_memory: (args) => saveCoreMemory(args.fact),
   retrieve_core_memory: () => searchCoreMemory(),
   save_note: (args) => saveNote({ title: args.title, content: args.content }),
@@ -1055,7 +1052,6 @@ const toolHandlers: Record<string, (args: any) => Promise<any>> = {
     }),
   delete_workflow: (args) => deleteWorkflow(args.name),
 
-  // 🎨 UI WIDGETS & GALLERY
   create_widget: (args) =>
     createWidget({ htmlCode: args.html_code, width: args.width, height: args.height }),
   close_widgets: () => closeAllWidgets(),
@@ -1066,7 +1062,6 @@ const toolHandlers: Record<string, (args: any) => Promise<any>> = {
   open_image_location: (args) => openImageLocation(args.filePath),
   save_image_external: (args) => saveImageExternal(args.sourcePath),
 
-  // 📱 ADB MOBILE CONTROL
   open_mobile_app: (args) => openAdbApp(args.package_name),
   close_mobile_app: (args) => closeAdbApp(args.package_name),
   tap_mobile_screen: (args) => tapAdb({ xPercent: args.x_percent, yPercent: args.y_percent }),
@@ -1079,7 +1074,6 @@ const toolHandlers: Record<string, (args: any) => Promise<any>> = {
     pullFileFromAdb({ sourcePath: args.source_path, destPath: args.dest_path }),
   toggle_mobile_hardware: (args) => toggleAdbHardware({ setting: args.setting, state: args.state }),
 
-  // Internal ADB mappings (not exposed to AI but used in backend)
   adb_get_history: () => getAdbHistory(),
   adb_connect: (args) => connectAdb({ ip: args.ip, port: args.port }),
   adb_disconnect: () => disconnectAdb(),
@@ -1087,15 +1081,12 @@ const toolHandlers: Record<string, (args: any) => Promise<any>> = {
   adb_quick_action: (args) => executeAdbQuickAction(args.action),
   adb_screenshot: () => takeAdbScreenshot(),
 
-  // 📧 GMAIL INTEGRATION
   read_emails: (args) => readEmails(args.max_results || 5),
   send_email: (args) => sendEmail({ to: args.to, subject: args.subject, body: args.body }),
   draft_email: (args) => createDraft({ to: args.to, subject: args.subject, body: args.body }),
 
-  // 🌍 TELEMETRY & CONTEXT
   get_live_location: () => getLiveLocation(),
 
-  // ⚠️ FALLBACKS FOR UNAVAILABLE MODULES (Prevents Crashes)
   play_spotify_music: (): any => 'Error: The Spotify integration module is currently disconnected.',
   send_whatsapp: (): any => 'Error: WhatsApp messaging is currently offline.',
   schedule_whatsapp: (): any => 'Error: WhatsApp scheduling is offline.',
