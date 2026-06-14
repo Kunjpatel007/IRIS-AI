@@ -25,6 +25,7 @@ import { pushVisionToGemini, StartIRIS, stopIRIS, toggleIRISMic } from './agents
 import { getMemory } from './hooks/iris-memory'
 import { getAdbHistory } from './mobile/adb-manager'
 import registerSystemHandlers from './lib/system'
+import registerFrontendIPC from './handler/ui-ipc-bridge'
 
 app.commandLine.appendSwitch('use-fake-ui-for-media-stream')
 
@@ -130,6 +131,8 @@ function toggleOverlayMode() {
 
 app.whenReady().then(() => {
   electronApp.setAppUserModelId('com.electron')
+
+  registerFrontendIPC()
 
   autoUpdater.autoDownload = true
   autoUpdater.autoInstallOnAppQuit = true
