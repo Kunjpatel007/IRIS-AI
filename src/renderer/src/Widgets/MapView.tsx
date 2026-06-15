@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { RiMapPin2Fill, RiCloseLine, RiRouteFill, RiTimeLine } from 'react-icons/ri'
-import L, { LatLngExpression } from 'leaflet'
+import L from 'leaflet'
 import 'leaflet/dist/leaflet.css'
 
 // Fix default Leaflet icon paths in Vite/React
@@ -16,34 +16,6 @@ const DefaultIcon = L.icon({
 })
 L.Marker.prototype.options.icon = DefaultIcon
 
-// Function to create a custom, sleek premium icon
-const PremiumIcon = (color: string) =>
-  L.divIcon({
-    className: 'custom-premium-marker',
-    html: `<div style="
-    width: 25px; 
-    height: 41px; 
-    background-color: ${color}; 
-    border-radius: 5px 5px 0 0; 
-    border: 2px solid rgba(255, 255, 255, 0.4); 
-    display: flex; 
-    justify-content: center; 
-    align-items: center; 
-    box-shadow: 0 0 10px ${color}
-  ">
-    <div style="
-      width: 12px; 
-      height: 12px; 
-      background-color: white; 
-      border-radius: 50%; 
-      box-shadow: 0 0 5px ${color}
-    "></div>
-  </div>`,
-    iconSize: [25, 41],
-    iconAnchor: [12, 41],
-    popupAnchor: [0, -35]
-  })
-
 export default function LeafletMapWidget() {
   const [mapData, setMapData] = useState<any>(null)
 
@@ -53,29 +25,6 @@ export default function LeafletMapWidget() {
 
   // ── 1. Listen for AI Backend Commands ──
   useEffect(() => {
-    // These derived values are placeholders until your backend is fully wired.
-    // This derived Nainital-Haldwani data deepens the contextual logic of your widget architect.
-    const derivedMapData = {
-      mode: 'route',
-      start: [29.39, 79.46], // Nainital start
-      end: [29.22, 79.52], // Haldwani end
-      info: {
-        origin: 'Nainital',
-        destination: 'Haldwani',
-        distance: '29.7 km',
-        duration: '39 mins'
-      },
-      // Derived sample path for visual deep understanding
-      path: [
-        [29.39, 79.46],
-        [29.35, 79.48],
-        [29.3, 79.5],
-        [29.22, 79.52]
-      ]
-    }
-
-    setMapData(derivedMapData)
-
     if (!window.electron?.ipcRenderer) return
 
     const handleMapUpdate = (_event: any, data: any) => {
@@ -106,10 +55,10 @@ export default function LeafletMapWidget() {
         attributionControl: false
       })
 
-      // Load Premium Colorful Dark Mode Tiles
-      L.tileLayer(
-        'https://{s}.basemaps.cartocdn.com/rastertiles/voyager_labels_under/{z}/{x}/{y}.png'
-      ).addTo(mapInstanceRef.current)
+      // Load Premium Dark Mode Tiles
+      L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png').addTo(
+        mapInstanceRef.current
+      )
     }
 
     const map = mapInstanceRef.current
@@ -122,7 +71,7 @@ export default function LeafletMapWidget() {
     if (mapData.mode === 'point') {
       map.flyTo([mapData.lat, mapData.lng], 13, { duration: 1.5 })
 
-      const marker = L.marker([mapData.lat, mapData.lng], { icon: PremiumIcon('#22d3ee') }) // Sleek cyan pin
+      const marker = L.marker([mapData.lat, mapData.lng])
         .bindPopup(`<strong style="font-family: sans-serif;">${mapData.name}</strong>`)
         .addTo(map)
 
@@ -131,17 +80,17 @@ export default function LeafletMapWidget() {
 
     // Draw Navigation Route
     else if (mapData.mode === 'route') {
-      const startMarker = L.marker(mapData.start, { icon: PremiumIcon('#22d3ee') }) // Sleek cyan pin
+      const startMarker = L.marker(mapData.start)
         .bindPopup(`Origin: ${mapData.info.origin}`)
         .addTo(map)
 
-      const endMarker = L.marker(mapData.end, { icon: PremiumIcon('#ff00ff') }) // Sleek magenta pin
+      const endMarker = L.marker(mapData.end)
         .bindPopup(`Destination: ${mapData.info.destination}`)
         .addTo(map)
 
       const routeLine = L.polyline(mapData.path, {
-        color: '#10b981', // Solid, vibrant emerald
-        weight: 6, // Substantial weight
+        color: '#10b981', // Emerald 500
+        weight: 4,
         opacity: 0.8,
         lineCap: 'round'
       }).addTo(map)
@@ -165,7 +114,7 @@ export default function LeafletMapWidget() {
   return (
     <AnimatePresence>
       {mapData && (
-        <div className="fixed inset-0 z-9999 flex items-center justify-center bg-black/80 backdrop-blur-xl p-8 font-sans">
+        <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/80 backdrop-blur-xl p-8 font-sans">
           <motion.div
             initial={{ opacity: 0, scale: 0.95, y: 20 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
@@ -174,7 +123,7 @@ export default function LeafletMapWidget() {
             className="relative w-full h-full max-w-6xl max-h-[85vh] bg-zinc-950 border border-white/10 rounded-3xl overflow-hidden shadow-2xl flex flex-col"
           >
             {/* ── TOP HUD BAR ── */}
-            <div className="absolute top-6 left-6 right-6 z-1000 flex justify-between items-start pointer-events-none">
+            <div className="absolute top-6 left-6 right-6 z-[1000] flex justify-between items-start pointer-events-none">
               <div className="bg-black/80 backdrop-blur-md border border-white/10 px-5 py-3 rounded-2xl pointer-events-auto shadow-xl flex items-center gap-4">
                 {mapData.mode === 'route' ? (
                   <>
@@ -182,15 +131,16 @@ export default function LeafletMapWidget() {
                       <RiRouteFill size={20} />
                     </div>
                     <div className="flex flex-col">
-                      <h2 className="text-cyan-400 font-bold tracking-wide">
-                        Nav: Nainital <span className="text-zinc-500 mx-1">➡</span> Haldwani
+                      <h2 className="text-white font-bold text-sm tracking-wide">
+                        {mapData.info.origin} <span className="text-zinc-500 mx-2">→</span>{' '}
+                        {mapData.info.destination}
                       </h2>
                       <div className="flex items-center gap-3 text-xs font-mono mt-1">
-                        <span className="text-gray-300 flex items-center gap-1">
+                        <span className="text-emerald-400 flex items-center gap-1">
                           <RiMapPin2Fill size={12} /> {mapData.info.distance}
                         </span>
                         <span className="text-zinc-600">|</span>
-                        <span className="text-gray-300 flex items-center gap-1">
+                        <span className="text-emerald-400 flex items-center gap-1">
                           <RiTimeLine size={12} /> {mapData.info.duration}
                         </span>
                       </div>
@@ -205,7 +155,7 @@ export default function LeafletMapWidget() {
                       <span className="text-[10px] text-zinc-500 font-mono tracking-widest uppercase">
                         Target Location
                       </span>
-                      <h2 className="text-cyan-400 font-bold text-base tracking-wide">
+                      <h2 className="text-white font-bold text-base tracking-wide">
                         {mapData.name}
                       </h2>
                     </div>
