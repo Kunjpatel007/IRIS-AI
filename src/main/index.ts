@@ -206,26 +206,37 @@ app.whenReady().then(() => {
     }
   }
 
-  ipcMain.handle('secure-save-keys', async (_, { groqKey, geminiKey }) => {
+  ipcMain.removeHandler('secure-save-keys')
+  ipcMain.removeHandler('secure-get-keys')
+  ipcMain.removeHandler('check-keys-exist')
+
+  ipcMain.handle('secure-save-keys', async (_, { groqKey, geminiKey, hfKey, tailvyKey }) => {
     try {
-      let groqEncrypted, geminiEncrypted
+      let groqEncrypted, geminiEncrypted, hfEncrypted, tailvyEncrypted
 
       if (safeStorage.isEncryptionAvailable()) {
-        groqEncrypted = safeStorage.encryptString(groqKey).toString('base64')
-        geminiEncrypted = safeStorage.encryptString(geminiKey).toString('base64')
+        groqEncrypted = groqKey ? safeStorage.encryptString(groqKey).toString('base64') : ''
+        geminiEncrypted = geminiKey ? safeStorage.encryptString(geminiKey).toString('base64') : ''
+        hfEncrypted = hfKey ? safeStorage.encryptString(hfKey).toString('base64') : ''
+        tailvyEncrypted = tailvyKey ? safeStorage.encryptString(tailvyKey).toString('base64') : ''
       } else {
-        groqEncrypted = Buffer.from(groqKey).toString('base64')
-        geminiEncrypted = Buffer.from(geminiKey).toString('base64')
+        groqEncrypted = groqKey ? Buffer.from(groqKey).toString('base64') : ''
+        geminiEncrypted = geminiKey ? Buffer.from(geminiKey).toString('base64') : ''
+        hfEncrypted = hfKey ? Buffer.from(hfKey).toString('base64') : ''
+        tailvyEncrypted = tailvyKey ? Buffer.from(tailvyKey).toString('base64') : ''
       }
 
       const secureData = {
         groq: groqEncrypted,
-        gemini: geminiEncrypted
+        gemini: geminiEncrypted,
+        hf: hfEncrypted,
+        tailvy: tailvyEncrypted
       }
 
       fs.writeFileSync(secureConfigPath, JSON.stringify(secureData))
       return { success: true }
     } catch (error: any) {
+      console.error('[Vault] Save Error:', error.message)
       return { success: false, error: error.message }
     }
   })
@@ -234,18 +245,26 @@ app.whenReady().then(() => {
     if (!fs.existsSync(secureConfigPath)) return null
     try {
       const data = JSON.parse(fs.readFileSync(secureConfigPath, 'utf8'))
-      let groqKey, geminiKey
+      let groqKey = '',
+        geminiKey = '',
+        hfKey = '',
+        tailvyKey = ''
 
       if (safeStorage.isEncryptionAvailable()) {
-        groqKey = safeStorage.decryptString(Buffer.from(data.groq, 'base64'))
-        geminiKey = safeStorage.decryptString(Buffer.from(data.gemini, 'base64'))
+        if (data.groq) groqKey = safeStorage.decryptString(Buffer.from(data.groq, 'base64'))
+        if (data.gemini) geminiKey = safeStorage.decryptString(Buffer.from(data.gemini, 'base64'))
+        if (data.hf) hfKey = safeStorage.decryptString(Buffer.from(data.hf, 'base64'))
+        if (data.tailvy) tailvyKey = safeStorage.decryptString(Buffer.from(data.tailvy, 'base64'))
       } else {
-        groqKey = Buffer.from(data.groq, 'base64').toString('utf8')
-        geminiKey = Buffer.from(data.gemini, 'base64').toString('utf8')
+        if (data.groq) groqKey = Buffer.from(data.groq, 'base64').toString('utf8')
+        if (data.gemini) geminiKey = Buffer.from(data.gemini, 'base64').toString('utf8')
+        if (data.hf) hfKey = Buffer.from(data.hf, 'base64').toString('utf8')
+        if (data.tailvy) tailvyKey = Buffer.from(data.tailvy, 'base64').toString('utf8')
       }
 
-      return { groqKey, geminiKey }
+      return { groqKey, geminiKey, hfKey, tailvyKey }
     } catch (err) {
+      console.error('[Vault] Read Error:', err)
       return null
     }
   })
