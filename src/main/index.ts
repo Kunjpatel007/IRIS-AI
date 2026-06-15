@@ -206,10 +206,11 @@ app.whenReady().then(() => {
     }
   }
 
-  // Prevent hot-reload crashes
   ipcMain.removeHandler('secure-save-keys')
   ipcMain.removeHandler('secure-get-keys')
+  ipcMain.removeHandler('check-keys-exist')
 
+  // ─── 2. SECURE SAVE HANDLER ───
   ipcMain.handle('secure-save-keys', async (_, { groqKey, geminiKey, hfKey, tailvyKey }) => {
     try {
       let groqEncrypted, geminiEncrypted, hfEncrypted, tailvyEncrypted
@@ -236,10 +237,12 @@ app.whenReady().then(() => {
       fs.writeFileSync(secureConfigPath, JSON.stringify(secureData))
       return { success: true }
     } catch (error: any) {
+      console.error('[Vault] Save Error:', error.message)
       return { success: false, error: error.message }
     }
   })
 
+  // ─── 3. SECURE GET HANDLER ───
   ipcMain.handle('secure-get-keys', async () => {
     if (!fs.existsSync(secureConfigPath)) return null
     try {
@@ -263,54 +266,12 @@ app.whenReady().then(() => {
 
       return { groqKey, geminiKey, hfKey, tailvyKey }
     } catch (err) {
+      console.error('[Vault] Read Error:', err)
       return null
     }
   })
 
-  ipcMain.handle('secure-get-keys', async () => {
-    if (!fs.existsSync(secureConfigPath)) return null
-    try {
-      const data = JSON.parse(fs.readFileSync(secureConfigPath, 'utf8'))
-      let groqKey = '',
-        geminiKey = '',
-        hfKey = ''
-
-      if (safeStorage.isEncryptionAvailable()) {
-        if (data.groq) groqKey = safeStorage.decryptString(Buffer.from(data.groq, 'base64'))
-        if (data.gemini) geminiKey = safeStorage.decryptString(Buffer.from(data.gemini, 'base64'))
-        if (data.hf) hfKey = safeStorage.decryptString(Buffer.from(data.hf, 'base64'))
-      } else {
-        if (data.groq) groqKey = Buffer.from(data.groq, 'base64').toString('utf8')
-        if (data.gemini) geminiKey = Buffer.from(data.gemini, 'base64').toString('utf8')
-        if (data.hf) hfKey = Buffer.from(data.hf, 'base64').toString('utf8')
-      }
-
-      return { groqKey, geminiKey, hfKey }
-    } catch (err) {
-      return null
-    }
-  })
-
-  ipcMain.handle('secure-get-keys', async () => {
-    if (!fs.existsSync(secureConfigPath)) return null
-    try {
-      const data = JSON.parse(fs.readFileSync(secureConfigPath, 'utf8'))
-      let groqKey, geminiKey
-
-      if (safeStorage.isEncryptionAvailable()) {
-        groqKey = safeStorage.decryptString(Buffer.from(data.groq, 'base64'))
-        geminiKey = safeStorage.decryptString(Buffer.from(data.gemini, 'base64'))
-      } else {
-        groqKey = Buffer.from(data.groq, 'base64').toString('utf8')
-        geminiKey = Buffer.from(data.gemini, 'base64').toString('utf8')
-      }
-
-      return { groqKey, geminiKey }
-    } catch (err) {
-      return null
-    }
-  })
-
+  // ─── 4. VAULT CHECK HANDLER ───
   ipcMain.handle('check-keys-exist', () => {
     return fs.existsSync(secureConfigPath)
   })
