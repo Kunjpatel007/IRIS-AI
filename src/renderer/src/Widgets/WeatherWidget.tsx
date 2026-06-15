@@ -92,12 +92,12 @@ export default function WeatherWidget() {
   }
 
   return (
-    <div className="fixed inset-0 z-[9050] flex items-center justify-center p-10 bg-black/80 backdrop-blur-sm">
+    <div className="fixed inset-0 z-9050 flex items-center justify-center p-10 bg-black/80 backdrop-blur-sm">
       <motion.div
         initial={{ scale: 0.9, opacity: 0, y: 20 }}
         animate={{ scale: 1, opacity: 1, y: 0 }}
         exit={{ scale: 0.9, opacity: 0, y: 20 }}
-        className={`relative w-full max-w-3xl aspect-[2/1] rounded-3xl overflow-hidden shadow-2xl bg-gradient-to-br ${bgGradient} transition-all duration-1000`}
+        className={`relative w-full max-w-3xl aspect-2/1 rounded-3xl overflow-hidden shadow-2xl bg-linear-to-br ${bgGradient} transition-all duration-1000`}
       >
         <button
           onClick={() => setIsVisible(false)}
