@@ -143,7 +143,7 @@ export default function SettingsView({ isSystemActive }: SettingsProps) {
           tailvyKey
         })
         alert(
-          'API Keys securely encrypted and saved to Vault. Restart the application to apply changes.'
+          'API Keys securely encrypted and saved to Vault. You can now Use this!.'
         )
       } catch (e) {
         alert('Failed to save keys to the secure vault.')
