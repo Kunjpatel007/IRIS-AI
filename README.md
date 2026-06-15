@@ -1,6 +1,6 @@
 <div align="center">
 
-![IRIS Neural OS Documentation Banner](./assets/banner.jpeg)
+![IRIS Neural OS Documentation Banner](./assets/banner.png)
 
 ## The Autonomous Neural OS Agent
 
@@ -297,7 +297,6 @@ These keys unlock advanced, autonomous subsystems.
 
 > 💡 **Having trouble finding your keys?** Visit our official [Key Forging Guide](https://irisaiw.vercel.app/guide) for step-by-step instructions.
 
-
 # 📁 Project Structure
 
 ```text
@@ -381,7 +380,6 @@ Use responsibly. The maintainers are not liable for misuse.
 
 ---
 
-
 # 👨‍💻 Architect
 
 **Harsh Pandey**  
@@ -406,6 +404,5 @@ MIT License — see LICENSE file.
 > _System Online._
 
 # Made with ❤️ by [Harsh Pandey](https://instagram.com/201Harshs)
-
 
 ---
