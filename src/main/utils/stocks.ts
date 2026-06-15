@@ -1,6 +1,5 @@
 import { BrowserWindow } from 'electron'
 
-// Centralized User Agent to prevent Yahoo Finance scraping blocks
 const APP_USER_AGENT = 'IRIS-X-Desktop-Application-v1'
 
 const fetchYahooData = async (ticker: string) => {
@@ -50,7 +49,6 @@ export const fetchStockData = async (ticker: string) => {
       chartData: chartData
     }
 
-    // THE FIX: Forward safely down the IPC channel
     const mainWindow = BrowserWindow.getAllWindows()[0]
     if (mainWindow) {
       mainWindow.webContents.send('show-stock', finalData)
@@ -114,7 +112,6 @@ export const compareStocks = async (ticker1: string, ticker2: string) => {
       chartData: Array.from(chartMap.values())
     }
 
-    // THE FIX: Forward safely down the IPC channel
     const mainWindow = BrowserWindow.getAllWindows()[0]
     if (mainWindow) {
       mainWindow.webContents.send('show-stock', finalData)
