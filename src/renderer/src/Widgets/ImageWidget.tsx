@@ -39,7 +39,6 @@ export default function ImageWidget() {
         setHasError(false)
         setStatusText('SAVING TO GALLERY...')
 
-        // Auto-save the base64 string directly via IPC
         try {
           await window.electron.ipcRenderer.invoke('save-image-to-gallery', {
             title: prompt,
@@ -53,7 +52,6 @@ export default function ImageWidget() {
       }
     }
 
-    // Listen to IPC instead of DOM window events
     window.electron.ipcRenderer.on('image-gen', handleIPCEvent)
 
     return () => {
@@ -66,7 +64,6 @@ export default function ImageWidget() {
   return (
     <div className="fixed inset-0 z-9050 flex items-center justify-center bg-black/90 backdrop-blur-md p-10">
       <div className="relative max-w-5xl max-h-[85vh] border-2 border-orange-500/50 rounded-3xl overflow-hidden shadow-[0_0_100px_rgba(249,115,22,0.2)] bg-black flex flex-col">
-        {/* ── TOP HUD BAR ── */}
         <div className="absolute top-0 left-0 w-full z-10 p-4 flex justify-between items-start pointer-events-none">
           <div className="bg-black/80 backdrop-blur border border-orange-500/50 px-4 py-2 rounded-lg pointer-events-auto">
             <h2 className="text-orange-400 font-bold tracking-widest text-xs uppercase font-mono">
@@ -81,7 +78,6 @@ export default function ImageWidget() {
           </button>
         </div>
 
-        {/* ── RENDER CONTAINER ── */}
         <div className="relative w-full h-full flex items-center justify-center min-w-125 min-h-100">
           {loading && (
             <div className="absolute inset-0 flex flex-col items-center justify-center space-y-4">
