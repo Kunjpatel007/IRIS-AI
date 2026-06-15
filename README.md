@@ -600,7 +600,9 @@ To ensure absolute privacy and safety, **IRIS does not use local `.env` files** 
 
 # 📁 Project Structure
 
-```text
+# Project Structure
+
+```
 ├── assets
 │   ├── banner-old.jpeg
 │   └── banner.png
@@ -611,10 +613,50 @@ To ensure absolute privacy and safety, **IRIS does not use local `.env` files** 
 │   ├── icon.icns
 │   ├── icon.ico
 │   └── icon.png
+├── docs
+│   ├── architecture
+│   │   └── system-design.md
+│   ├── core-systems
+│   │   ├── local-memory.md
+│   │   ├── os-automation.md
+│   │   └── voice-engine.md
+│   ├── development
+│   │   ├── setup-guide.md
+│   │   └── tool-creation.md
+│   ├── security
+│   │   └── local-vault.md
+│   ├── troubleshooting
+│   │   └── common-issues.md
+│   ├── AGENT_ORCHESTRATION.md
+│   ├── API_INTEGRATION.md
+│   ├── API_REFERENCE.md
+│   ├── ARCHITECTURE.md
+│   ├── AVAILABLE_TOOLS.md
+│   ├── CHANGELOG.md
+│   ├── CODE_PROTECTION.md
+│   ├── CONTRIBUTING.md
+│   ├── CUSTOMIZATION.md
+│   ├── DEPLOYMENT.md
+│   ├── DEVELOPMENT.md
+│   ├── EXAMPLES.md
+│   ├── FAQ.md
+│   ├── GETTING_STARTED.md
+│   ├── GLOSSARY.md
+│   ├── INDEX.md
+│   ├── IPC_BRIDGE.md
+│   ├── PERFORMANCE.md
+│   ├── ROADMAP.md
+│   ├── SECURITY.md
+│   ├── SPONSORSHIP_GUIDE.md
+│   ├── TOOLS_SYSTEM.md
+│   ├── TROUBLESHOOTING.md
+│   └── VOICE_PROCESSING.md
 ├── resources
 │   ├── logo.png
 │   └── old-logo.png
 ├── scripts
+│   ├── workflows
+│   │   └── ci.yml
 │   └── dependabot.yml
 ├── src
 │   ├── main
@@ -865,7 +907,8 @@ To ensure absolute privacy and safety, **IRIS does not use local `.env` files** 
 │   └── Makefile
 ├── .env.example
 ├── Agents.md
-├── banner.jpeg
+├── banner.png
+├── CHANGELOG.md
 ├── CLAUDE.md
 ├── CODE_OF_CONDUCT.md
 ├── CONTRIBUTING.md
@@ -879,6 +922,7 @@ To ensure absolute privacy and safety, **IRIS does not use local `.env` files** 
 ├── README.md
 ├── README.txt
 ├── SECURITY.md
+├── SUPPORT.md
 ├── tsconfig.json
 ├── tsconfig.node.json
 └── tsconfig.web.json
