@@ -1,32 +1,33 @@
-MIT License
+# 📜 IRIS Neural OS License (Custom Source-Available Agreement)
 
-Copyright (c) 2026 Harsh Pandey
+**Copyright (c) 2026 Harsh Pandey**
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
+This license governs the public code repository, frontend presentation layers, and accessible working code snippets of the IRIS Neural OS project. The hidden core voice engine, advanced execution tools, and closed-source backend architectures are protected properties and are entirely excluded from this agreement.
 
-1. EDUCATIONAL AND PERSONAL USE ONLY: The Software is provided strictly for
-   personal projects, educational purposes, and non-profit use.
+### Terms and Conditions
 
-2. NO COMMERCIAL USE OR PAID WORK: You may NOT use, modify, or distribute
-   this Software for any commercial purpose, paid client work, enterprise
-   deployment, or revenue-generating activities.
+Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software, including without limitation the rights to use, copy, modify, merge, publish, or distribute copies of the Software, subject to the following strict conditions:
 
-3. STRICT ENFORCEMENT: Any misuse, commercial exploitation, or violation of
-   these terms immediately terminates this license and will subject the violator
-   to legal action and liability for damages.
+#### 1. Educational and Personal Use Only
 
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
+The Software is provided strictly for personal exploration, educational validation, and non-profit use.
 
-NO WARRANTY. THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
-IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
-DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
-OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE
-USE OR OTHER DEALINGS IN THE SOFTWARE.
+#### 2. No Commercial Use or Paid Work
+
+You may **NOT** use, modify, merge, or distribute this Software for any commercial purposes, paid client projects, multi-user enterprise deployments, or any revenue-generating activities. Commercial execution or distribution strictly requires an authorized Enterprise Tier subscription ($50/mo tier) or an explicit corporate agreement.
+
+#### 3. Strict Enforcement
+
+Any unauthorized commercial exploitation, license terms violation, or circumvention of the core execution payload structure immediately terminates this license. Violations will subject the individual or entity to immediate legal action and liability for damages.
+
+---
+
+### Attribution Requirement
+
+The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+
+---
+
+### Disclaimer of Warranty
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
