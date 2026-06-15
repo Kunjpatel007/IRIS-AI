@@ -95,9 +95,9 @@ It is a **Voice-First Desktop AI Assistant** that executes real-world actions ac
 
 # 🪡 Open Core Model
 
-IRIS follows an Open Core development model.
+### IRIS follows an Open Core development model.
 
-The public repository includes:
+**The public repository includes**:
 
 - Desktop application framework
 - User interface
