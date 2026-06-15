@@ -317,56 +317,77 @@ IRIS is built on open-source principles, but the **core agent logic and propriet
 
 ---
 
-## ⭐ GitHub Sponsors Tier ($5/month)
+# 💰 Sponsorship Tiers
 
-**What You Get:**
+IRIS is built on open-source principles, but the **core voice engine, agent loops, and advanced execution tools are hidden** within private repositories to protect intellectual property and fund ongoing development.
 
-- ✅ Everything in Free Tier
-- ✅ **Working Example Code Snippets** (agent & tools)
-- ✅ Advanced setup guides
-- ✅ Private GitHub Discussions (faster support)
-- ✅ Monthly development updates
-- ✅ Early access to new features
-- ✅ Custom configuration templates
-- ✅ PDF guides & tutorials
-
-**What You DON'T Get:**
-
-- ❌ Full source code (agent/tools remain protected)
-- ❌ Ability to self-host (protected code can't run locally without sponsorship)
-- ❌ Commercial license (requires higher tier)
-
-**Cost:** $5/month (USD)  
-**Commitment:** Cancel anytime
-
-**Signup:** [GitHub Sponsors - @201Harsh](https://github.com/sponsors/201Harsh)
+Review the options below to choose your access level and support the ecosystem.
 
 ---
 
-## 🏢 Enterprise Tier ($50/month)
+## 🎁 Free Tier (Public Repository)
 
-**What You Get:**
+The baseline public repository contains the foundational UI layer, layout configuration, and basic ecosystem scaffolding.
 
-- ✅ Everything in Sponsors Tier
-- ✅ **Full source code access** (agent + tools unprotected)
-- ✅ Commercial license
-- ✅ Self-hosting capabilities
-- ✅ Private Discord channel (direct support)
-- ✅ Custom modifications & features
-- ✅ Priority bug fixes
-- ✅ Quarterly strategy calls
+- **What is Included:** Access to the public frontend shell (React + Tailwind + Framer Motion), community documentation, public GitHub issue tracking, and basic structural templates.
+- **What is Locked:** Full agent execution routines, the core voice module, deep automation tool logic, and local self-hosting capability.
+- **Monthly Cost:** Free
 
-**Perfect For:**
+---
 
-- Companies integrating IRIS
-- Custom deployments
-- Commercial applications
-- Teams needing priority support
+## 🟢 IRIS Supporter ($5/month)
 
-**Cost:** $50/month (USD)  
-**Commitment:** Annual contract (can negotiate)
+Directly back the future of the IRIS ecosystem and unlock standard project insight.
 
-**Signup:** [Enterprise Support Form](https://forms.gle/your-form-link)
+- **GitHub Sponsor Badge:** Displays a verification badge on your public GitHub profile.
+- **Sponsor-Only Updates:** Direct access to private text updates regarding upcoming system builds.
+- **Development Progress Reports:** Behind-the-scenes engineering logs showing what is being cooked next.
+- **Monthly Project Summaries:** Comprehensive recaps of system changes, optimizations, and performance stats.
+- **Monthly Cost:** $5/month (USD)
+- **Access Link:** [Sponsor @201Harsh on GitHub](https://github.com/sponsors/201Harsh)
+
+---
+
+## ⚡ IRIS Insider ($15/month)
+
+Step closer to the codebase with private repository access and deep architectural insights.
+
+- **Private Repository Access:** Full read access to the `iris-insiders` repository containing working functional code snippets for core agent hooks.
+- **Early Development Previews:** See upcoming UI elements and feature modules weeks before public release.
+- **Architecture Discussions:** Participate in private development threads discussing system performance and state management.
+- **Behind-the-Scenes Progress:** Unfiltered access to video showcases and performance benchmarks of current builds.
+- **Experimental Showcases:** Early look at how the voice processing pipeline handles background noise filtration.
+- **Monthly Cost:** $15/month (USD)
+- **Access Link:** [Sponsor @201Harsh on GitHub](https://github.com/sponsors/201Harsh)
+
+---
+
+## 🚀 IRIS Builder ($30/month)
+
+Designed for developer-level sponsors who want to experiment with custom setups and prototype structures.
+
+- **Access to Iris-Labs:** Direct membership to the `iris-labs` repository for code sharing and component testing.
+- **Experimental AI Agents:** Access to unreleased experimental agent logic scripts and prompt testbeds.
+- **Prototype Systems:** Early-stage UI widgets, window managers, and terminal interaction mockups.
+- **Technical Development Logs:** Deep-dive logs exploring lower-level Electron execution, IPC communication, and V8 bytecode compilation tricks.
+- **Alpha Feature Testing:** Opportunities to run partial standalone builds of upcoming tooling systems.
+- **Advanced Architecture Breakdowns:** Full block diagrams and technical write-ups detailing the communication between backend processes.
+- **Monthly Cost:** $30/month (USD)
+- **Access Link:** [Sponsor @201Harsh on GitHub](https://github.com/sponsors/201Harsh)
+
+---
+
+## 👁️ IRIS Alpha Access ($50/month)
+
+The definitive sponsor tier. Get absolute proximity to the latest builds, edge implementations, and direct development feedback priority.
+
+- **Access to Iris-Alpha:** Exclusive membership to the bleeding-edge `iris-alpha` environment.
+- **Early Alpha Builds:** Downloadable compiled packages of upcoming desktop application releases for early testing.
+- **Upcoming Feature Previews:** Full access to high-tier closed tools (including advanced automated web navigation and cross-device mobile pairing prototypes).
+- **Private Release Notes:** Granular, code-level changelogs tracking every structural patch.
+- **Priority Sponsor Feedback:** Direct consideration for your feature requests, tool ideas, and framework optimizations.
+- **Monthly Cost:** $50/month (USD)
+- **Access Link:** [Sponsor @201Harsh on GitHub](https://github.com/sponsors/201Harsh)
 
 ---
 
