@@ -61,7 +61,7 @@ A voice-first neural execution system powered by **Gemini 3.1 Live API** with re
 
 IRIS is not a chatbot.
 
-It is a **voice-first AI Operating System layer** that executes real-world actions across your system, applications, and devices—powered by **Gemini 2.5 Flash** with real-time bidirectional audio processing.
+It is a **voice-first AI Operating System layer** that executes real-world actions across your system, applications, and devices—powered by **Gemini 3.1 Live API** with real-time bidirectional audio processing.
 
 > **Speak naturally. IRIS understands intent. Real actions execute instantly.**
 
@@ -393,7 +393,7 @@ ipcMain.handle('tool-name', async (event, payload) => {
 
 ### AI Integration
 
-- **Gemini 2.5 Flash** – Real-time voice processing
+- **Gemini 3.1 Live API** – Real-time voice processing
 - **Groq API** – Ultra-fast inference fallback
 - **Hugging Face** – Local model support
 - **Tavily** – Web search & research
@@ -413,7 +413,7 @@ ipcMain.handle('tool-name', async (event, payload) => {
 
 ### 🧠 AI & Agent Layer (PROTECTED)
 
-- **Google Gemini 2.5 Flash:** Primary reasoning engine + WebRTC audio
+- **Google Gemini 3.1 Live API:** Primary reasoning engine + WebRTC audio
 - **Groq SDK:** Ultra-fast inference routing
 - **LangGraph:** Agentic state orchestration (protected)
 - **Hugging Face:** Local model inference
