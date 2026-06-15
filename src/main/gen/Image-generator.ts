@@ -17,11 +17,11 @@ export const handleImageGeneration = async (prompt: string) => {
     if (fsSync.existsSync(secureConfigPath)) {
       try {
         const data = JSON.parse(fsSync.readFileSync(secureConfigPath, 'utf8'))
-        if (data.huggingface) {
+        if (data.groqKey) {
           if (safeStorage.isEncryptionAvailable()) {
-            hfKey = safeStorage.decryptString(Buffer.from(data.huggingface, 'base64'))
+            hfKey = safeStorage.decryptString(Buffer.from(data.groqKey, 'base64'))
           } else {
-            hfKey = Buffer.from(data.huggingface, 'base64').toString('utf8')
+            hfKey = Buffer.from(data.groqKey, 'base64').toString('utf8')
           }
         }
       } catch (e) {
