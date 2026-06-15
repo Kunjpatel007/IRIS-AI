@@ -19,7 +19,6 @@ export async function buildAnimatedWebsite({ prompt }) {
         contextIsolation: true
       }
     })
-    
 
     let geminiKey = ''
     const secureConfigPath = path.join(app.getPath('userData'), 'iris_secure_vault.json')
@@ -91,7 +90,7 @@ CRITICAL RULES:
 OUTPUT ONLY RAW HTML.`
 
     const response = await ai.models.generateContentStream({
-      model: 'gemini-3-flash-preview',
+      model: 'gemini-3.5-flash',
       contents: `${sysPrompt}\n\nUSER PROMPT: ${prompt}`
     })
 
