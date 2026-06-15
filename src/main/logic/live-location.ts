@@ -12,9 +12,7 @@ const runPowerShell = (cmd: string): Promise<string> => {
 
 export async function getLiveLocation() {
   try {
-    // ── TIER 1: Exact Hardware Triangulation (Windows Only) ──
     if (os.platform() === 'win32') {
-      // Wakes up the sensor, waits up to 4 seconds for a lock, and explicitly checks for Permission Denied.
       const psCommand = `Add-Type -AssemblyName System.Device; $w = New-Object System.Device.Location.GeoCoordinateWatcher(1); $w.TryStart($false, [timespan]::FromSeconds(4)) | Out-Null; if ($w.Permission -eq 'Denied') { Write-Output 'DENIED' } elseif ($w.Position.Location.IsUnknown) { Write-Output 'UNKNOWN' } else { Write-Output "$($w.Position.Location.Latitude),$($w.Position.Location.Longitude)" }`
 
       const osLocation = await runPowerShell(psCommand)
@@ -24,7 +22,6 @@ export async function getLiveLocation() {
           '⚠️ IRIS: Windows Location Services are DISABLED in Windows Privacy Settings. Exact location blocked.'
         )
       } else if (osLocation && osLocation.includes(',')) {
-        // SUCCESS: We got exact coordinates from the OS
         const [lat, lon] = osLocation.split(',')
 
         const geoRes = await fetch(
@@ -45,8 +42,6 @@ export async function getLiveLocation() {
       }
     }
 
-    // ── TIER 2: Best Available IP Fallback ──
-    // If Windows blocks us, we use ipwho.is (No API key needed, extremely reliable, ignores custom headers)
     console.log('📡 IRIS: Falling back to IP-based location mapping...')
 
     const ipRes = await fetch('https://ipwho.is/')
