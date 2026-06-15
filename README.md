@@ -65,7 +65,7 @@ A voice-first neural execution system powered by **Gemini 3.1 Live API** with re
 
 IRIS is not a chatbot.
 
-It is a **voice-first Desktop AI Assistant** that executes real-world actions across your system, applications, and devices—powered by **Gemini 3.1 Live API** with real-time bidirectional audio processing.
+It is a **Voice-First Desktop AI Assistant** that executes real-world actions across your system, applications, and devices—powered by **Gemini 3.1 Live API** with real-time bidirectional audio processing.
 
 > **Speak naturally. IRIS understands intent. Real actions execute instantly.**
 
