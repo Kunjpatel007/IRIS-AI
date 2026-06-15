@@ -115,7 +115,7 @@ Results Streamed Back to You
 
 - **Latency:** < 500ms end-to-end (including network)
 - **Quality:** Full duplex (talk while agent responds)
-- **Models:** Gemini 3.1 Live API (primary) + Groq + Hugging Face (fallback)
+- **Models:** Gemini 3.1 Live API (primary) + Groq (Fast Responses) + Hugging Face (Open-Sourced Models)
 - **Search:** Tavily for real-time web data
 
 No local-only limitations. IRIS connects to **cloud AI, search engines, and APIs** for maximum intelligence.
