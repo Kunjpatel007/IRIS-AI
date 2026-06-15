@@ -149,15 +149,15 @@ export default function LeafletMapWidget() {
   return (
     <AnimatePresence>
       {mapData && (
-        <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/60 backdrop-blur-sm p-4 lg:p-8 font-sans">
+        <div className="fixed inset-0 z-9999 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4 lg:p-8 font-sans">
           <motion.div
             initial={{ opacity: 0, scale: 0.95, y: 20 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.95, y: 20 }}
             transition={{ type: 'spring', damping: 25, stiffness: 300 }}
-            className="relative w-full h-full max-w-6xl max-h-[85vh] bg-white border border-white/20 rounded-[2rem] overflow-hidden shadow-[0_20px_50px_rgba(0,0,0,0.5)] flex flex-col"
+            className="relative w-full h-full max-w-6xl max-h-[85vh] bg-white border border-white/20 rounded-4xl overflow-hidden shadow-[0_20px_50px_rgba(0,0,0,0.5)] flex flex-col"
           >
-            <div className="absolute top-4 left-4 right-4 lg:top-6 lg:left-6 lg:right-6 z-[1000] flex justify-between items-start pointer-events-none">
+            <div className="absolute top-4 left-4 right-4 lg:top-6 lg:left-6 lg:right-6 z-1000 flex justify-between items-start pointer-events-none">
               <div className="bg-black/90 backdrop-blur-xl border border-white/10 px-5 py-3.5 rounded-2xl pointer-events-auto shadow-2xl flex items-center gap-4">
                 {mapData.mode === 'route' ? (
                   <>
