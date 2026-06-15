@@ -1,8 +1,18 @@
+import { BrowserWindow } from 'electron'
+
+// Centralized User Agent to prevent Yahoo Finance scraping blocks
+const APP_USER_AGENT = 'IRIS-X-Desktop-Application-v1'
+
 const fetchYahooData = async (ticker: string) => {
   const url = `https://query1.finance.yahoo.com/v8/finance/chart/${ticker}?range=1d&interval=5m`
-  const response = await fetch(url)
+  const response = await fetch(url, {
+    headers: { 'User-Agent': APP_USER_AGENT }
+  })
+
+  if (!response.ok) throw new Error(`Yahoo Finance HTTP Error: ${response.status}`)
+
   const data = await response.json()
-  if (!data.chart.result) throw new Error(`Invalid ticker: ${ticker}`)
+  if (!data.chart || !data.chart.result) throw new Error(`Invalid ticker: ${ticker}`)
   return data.chart.result[0]
 }
 
@@ -40,9 +50,15 @@ export const fetchStockData = async (ticker: string) => {
       chartData: chartData
     }
 
-    window.dispatchEvent(new CustomEvent('show-stock', { detail: finalData }))
+    // THE FIX: Forward safely down the IPC channel
+    const mainWindow = BrowserWindow.getAllWindows()[0]
+    if (mainWindow) {
+      mainWindow.webContents.send('show-stock', finalData)
+    }
+
     return `The current stock price of ${ticker} is ${finalData.currentPrice1}. It is ${finalData.isPositive1 ? 'up' : 'down'} by ${Math.abs(Number(finalData.percentChange1))}% today.`
   } catch (error: any) {
+    console.error(`[StocksManager] Error fetching ${ticker}:`, error)
     return `Failed to fetch data for ${ticker}.`
   }
 }
@@ -98,9 +114,15 @@ export const compareStocks = async (ticker1: string, ticker2: string) => {
       chartData: Array.from(chartMap.values())
     }
 
-    window.dispatchEvent(new CustomEvent('show-stock', { detail: finalData }))
+    // THE FIX: Forward safely down the IPC channel
+    const mainWindow = BrowserWindow.getAllWindows()[0]
+    if (mainWindow) {
+      mainWindow.webContents.send('show-stock', finalData)
+    }
+
     return `Comparing ${ticker1} and ${ticker2}. ${ticker1} is at ${finalData.currentPrice1}, and ${ticker2} is at ${finalData.currentPrice2}.`
   } catch (error: any) {
+    console.error(`[StocksManager] Comparison failure between ${ticker1} and ${ticker2}:`, error)
     return `Comparison failed. Please verify tickers ${ticker1} and ${ticker2}.`
   }
 }
