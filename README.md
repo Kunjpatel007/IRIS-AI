@@ -100,7 +100,7 @@ IRIS is **voice-first**: you speak → they listen & execute → actions happen 
 ```
 Your Voice
     ↓ (WebRTC Stream)
-Gemini 2.5 Flash (Real-time)
+Gemini 3.1 Live API (Real-time)
     ↓ (Intent Recognition)
 LangGraph Agent Orchestration
     ↓ (Tool Selection)
@@ -111,7 +111,7 @@ Results Streamed Back to You
 
 - **Latency:** < 500ms end-to-end (including network)
 - **Quality:** Full duplex (talk while agent responds)
-- **Models:** Gemini 2.5 Flash (primary) + Groq + Hugging Face (fallback)
+- **Models:** Gemini 3.1 Live API (primary) + Groq + Hugging Face (fallback)
 - **Search:** Tavily for real-time web data
 
 No local-only limitations. IRIS connects to **cloud AI, search engines, and APIs** for maximum intelligence.
