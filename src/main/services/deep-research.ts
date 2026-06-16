@@ -1,50 +1,60 @@
-import { BrowserWindow, safeStorage, app } from 'electron'
+import { app, BrowserWindow, safeStorage } from 'electron'
 import { tavily } from '@tavily/core'
 import Groq from 'groq-sdk'
-import fsSync from 'fs'
 import path from 'path'
+import fsSync from 'fs'
 
-function emitProgress(payload: { status: string; file: string; totalFound: number }) {
-  const win = BrowserWindow.getAllWindows()[0]
-  if (win && !win.isDestroyed()) {
-    win.webContents.send('oracle-progress', payload)
+function emitProgress(
+  mainWindow: BrowserWindow,
+  payload: { status: string; file: string; totalFound: number }
+) {
+  if (mainWindow && !mainWindow.isDestroyed()) {
+    mainWindow.webContents.send('oracle-progress', payload)
   }
 }
 
-export async function executeDeepResearch({
-  query,
-  groqKey
-}: {
-  query: string
-  tavilyKey: string
-  groqKey: string
-}) {
+export async function executeDeepResearch({ query }: { query: string }) {
+  const mainWindow = BrowserWindow.getAllWindows()[0]
+
+  // 1. Open the UI Widget immediately
+  if (mainWindow) {
+    mainWindow.webContents.send('deep-research-start', { query })
+  }
+
   try {
-    let tailvyKey = ''
+    let tavilyKey = ''
+    let groqKey = ''
     const secureConfigPath = path.join(app.getPath('userData'), 'iris_secure_vault.json')
 
+    // 2. Extract keys securely from the local OS vault
     if (fsSync.existsSync(secureConfigPath)) {
       try {
         const data = JSON.parse(fsSync.readFileSync(secureConfigPath, 'utf8'))
+
         if (safeStorage.isEncryptionAvailable()) {
-          tailvyKey = safeStorage.decryptString(Buffer.from(data.tavily, 'base64'))
+          if (data.tavily) tavilyKey = safeStorage.decryptString(Buffer.from(data.tavily, 'base64'))
+          if (data.groq) groqKey = safeStorage.decryptString(Buffer.from(data.groq, 'base64'))
         } else {
-          tailvyKey = Buffer.from(data.tavily, 'base64').toString('utf8')
+          if (data.tavily) tavilyKey = Buffer.from(data.tavily, 'base64').toString('utf8')
+          if (data.groq) groqKey = Buffer.from(data.groq, 'base64').toString('utf8')
         }
-      } catch (e) {}
+      } catch (e) {
+        console.error('Vault read error:', e)
+      }
     }
 
-    if (!tailvyKey || !groqKey) {
+    if (!tavilyKey || !groqKey) {
       throw new Error('Missing API Keys. Please configure Tavily and Groq in the Command Center.')
     }
 
-    emitProgress({
+    emitProgress(mainWindow, {
       status: 'scanning',
       file: 'IRIS and Tavily Neural Search Active...',
       totalFound: 1
     })
 
-    const tvly = tavily({ apiKey: tailvyKey })
+    // 3. Execute Web Crawl
+    const tvly = tavily({ apiKey: tavilyKey })
     const tavilyData = await tvly.search(query, {
       searchDepth: 'advanced',
       includeAnswer: true,
@@ -55,12 +65,13 @@ export async function executeDeepResearch({
       .map((r: any) => `Source: ${r.url}\nContent: ${r.content}`)
       .join('\n\n')
 
-    emitProgress({
+    emitProgress(mainWindow, {
       status: 'reading',
       file: 'Llama 3.1 Instantly Synthesizing Data...',
       totalFound: 2
     })
 
+    // 4. Execute Fast Synthesis via Groq
     const groq = new Groq({ apiKey: groqKey })
     const prompt = `
       You are an elite research analyst. Answer: "${query}".
@@ -79,14 +90,25 @@ export async function executeDeepResearch({
     const parsedData = JSON.parse(jsonString)
     const extractedSummary = parsedData.summary || 'No data generated.'
 
-    emitProgress({
+    emitProgress(mainWindow, {
       status: 'embedded',
       file: 'Research synthesis complete...',
       totalFound: 3
     })
 
-    return { success: true, summary: extractedSummary }
-  } catch (error) {
-    return { success: false, error: String(error) }
+    // 5. Tell the UI to close/display success
+    if (mainWindow) {
+      mainWindow.webContents.send('deep-research-done', {
+        success: true,
+        summary: extractedSummary
+      })
+    }
+
+    return `Deep research completed. Summary provided to user interface.`
+  } catch (error: any) {
+    if (mainWindow) {
+      mainWindow.webContents.send('deep-research-done', { success: false, summary: null })
+    }
+    return `Error during deep research: ${error.message}`
   }
 }
