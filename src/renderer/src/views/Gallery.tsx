@@ -4,18 +4,18 @@ import {
   RiDeleteBinLine,
   RiFolderOpenLine,
   RiCloseLine,
-  RiMagicLine,
+  RiDatabase2Line,
   RiFileWarningLine,
   RiArrowLeftSLine,
   RiArrowRightSLine,
   RiDownloadLine,
   RiVideoLine,
   RiPlayCircleLine,
-  RiSearchEyeLine
+  RiLayoutGridFill
 } from 'react-icons/ri'
 import { motion, AnimatePresence } from 'framer-motion'
 
-interface GalleryAsset {
+interface MediaFile {
   filename: string
   displayName: string
   path: string
@@ -25,32 +25,33 @@ interface GalleryAsset {
 }
 
 const GalleryView = () => {
-  const [allAssets, setAllAssets] = useState<GalleryAsset[]>([])
-  const [visibleAssets, setVisibleAssets] = useState<GalleryAsset[]>([])
-  const [selectedAsset, setSelectedAsset] = useState<GalleryAsset | null>(null)
+  const [allMedia, setAllMedia] = useState<MediaFile[]>([])
+  const [visibleMedia, setVisibleMedia] = useState<MediaFile[]>([])
+  const [selectedMedia, setSelectedMedia] = useState<MediaFile | null>(null)
 
   const [direction, setDirection] = useState(0)
   const [page, setPage] = useState(1)
   const ITEMS_PER_PAGE = 12
   const observer = useRef<IntersectionObserver | null>(null)
 
-  const lastAssetRef = useCallback(
+  const lastMediaRef = useCallback(
     (node: HTMLDivElement) => {
       if (observer.current) observer.current.disconnect()
       observer.current = new IntersectionObserver((entries) => {
-        if (entries[0].isIntersecting && visibleAssets.length < allAssets.length) {
+        if (entries[0].isIntersecting && visibleMedia.length < allMedia.length) {
           setPage((prev) => prev + 1)
         }
       })
       if (node) observer.current.observe(node)
     },
-    [visibleAssets.length, allAssets.length]
+    [visibleMedia.length, allMedia.length]
   )
 
   const fetchGallery = async () => {
     try {
       const data = await window.electron.ipcRenderer.invoke('get-gallery')
       if (Array.isArray(data)) {
+        // Tag as video/image and sort newest first
         const typedData = data
           .map((item: any) => ({
             ...item,
@@ -58,10 +59,10 @@ const GalleryView = () => {
           }))
           .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
 
-        setAllAssets(typedData)
+        setAllMedia(typedData)
       }
     } catch (e) {
-      console.error('Failed to fetch visual vault artifacts.', e)
+      console.error('Failed to load media files.')
     }
   }
 
@@ -73,17 +74,17 @@ const GalleryView = () => {
 
   useEffect(() => {
     const endIndex = page * ITEMS_PER_PAGE
-    setVisibleAssets(allAssets.slice(0, endIndex))
-  }, [page, allAssets])
+    setVisibleMedia(allMedia.slice(0, endIndex))
+  }, [page, allMedia])
 
-  const deleteAsset = async (filename: string, e?: React.MouseEvent) => {
+  const deleteMedia = async (filename: string, e?: React.MouseEvent) => {
     e?.stopPropagation()
     await window.electron.ipcRenderer.invoke('delete-image', filename)
 
-    if (selectedAsset) {
-      const currentIndex = allAssets.findIndex((img) => img.filename === selectedAsset.filename)
-      const nextAsset = allAssets[currentIndex + 1] || allAssets[currentIndex - 1]
-      setSelectedAsset(nextAsset || null)
+    if (selectedMedia) {
+      const currentIndex = allMedia.findIndex((media) => media.filename === selectedMedia.filename)
+      const nextMedia = allMedia[currentIndex + 1] || allMedia[currentIndex - 1]
+      setSelectedMedia(nextMedia || null)
     }
     fetchGallery()
   }
@@ -98,30 +99,33 @@ const GalleryView = () => {
     await window.electron.ipcRenderer.invoke('save-image-external', path)
   }
 
-  const navigateAsset = useCallback(
+  const navigateMedia = useCallback(
     (newDirection: number) => {
-      if (!selectedAsset || allAssets.length === 0) return
+      if (!selectedMedia || allMedia.length === 0) return
       setDirection(newDirection)
-      const currentIndex = allAssets.findIndex((img) => img.filename === selectedAsset.filename)
+
+      const currentIndex = allMedia.findIndex((media) => media.filename === selectedMedia.filename)
       if (currentIndex === -1) return
+
       let newIndex = currentIndex + newDirection
-      if (newIndex >= allAssets.length) newIndex = 0
-      if (newIndex < 0) newIndex = allAssets.length - 1
-      setSelectedAsset(allAssets[newIndex])
+      if (newIndex >= allMedia.length) newIndex = 0
+      if (newIndex < 0) newIndex = allMedia.length - 1
+
+      setSelectedMedia(allMedia[newIndex])
     },
-    [selectedAsset, allAssets]
+    [selectedMedia, allMedia]
   )
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (!selectedAsset) return
-      if (e.key === 'ArrowRight') navigateAsset(1)
-      if (e.key === 'ArrowLeft') navigateAsset(-1)
-      if (e.key === 'Escape') setSelectedAsset(null)
+      if (!selectedMedia) return
+      if (e.key === 'ArrowRight') navigateMedia(1)
+      if (e.key === 'ArrowLeft') navigateMedia(-1)
+      if (e.key === 'Escape') setSelectedMedia(null)
     }
     window.addEventListener('keydown', handleKeyDown)
     return () => window.removeEventListener('keydown', handleKeyDown)
-  }, [selectedAsset, navigateAsset])
+  }, [selectedMedia, navigateMedia])
 
   const variants = {
     enter: (dir: number) => ({
@@ -142,128 +146,128 @@ const GalleryView = () => {
 
   return (
     <div className="flex-1 bg-neutral-950 h-full p-8 md:p-10 animate-in fade-in duration-500 flex flex-col overflow-hidden selection:bg-emerald-500/30 text-white font-sans">
+      {/* Header */}
       <div className="flex items-end justify-between pb-6 border-b border-white/5 mb-8 shrink-0">
         <div className="flex items-center gap-4">
-          <div className="p-3 bg-linear-to-br from-emerald-500/20 to-teal-500/5 rounded-2xl border border-emerald-500/30 shadow-[0_0_30px_rgba(16,185,129,0.15)] relative overflow-hidden">
-            <div className="absolute inset-0 bg-emerald-400/20 blur-xl animate-pulse" />
-            <RiSearchEyeLine className="text-emerald-400 relative z-10" size={28} />
+          <div className="p-3 bg-neutral-900 rounded-2xl border border-neutral-800 shadow-md">
+            <RiLayoutGridFill className="text-emerald-500" size={28} />
           </div>
           <div>
-            <h2 className="text-xl font-black tracking-[0.25em] text-white uppercase flex items-center gap-2">
-              Visual Vault{' '}
-              <span className="bg-white/10 px-2 py-0.5 rounded text-[10px] font-mono tracking-normal text-emerald-400 border border-white/5">
-                V2.0
-              </span>
+            <h2 className="text-xl font-bold tracking-wider text-white uppercase flex items-center gap-2">
+              Media Vault
             </h2>
-            <p className="text-xs text-neutral-500 font-mono mt-1 tracking-widest uppercase">
-              Encrypted Media Storage Node
+            <p className="text-xs text-neutral-500 mt-1 uppercase tracking-widest">
+              Local Device Storage
             </p>
           </div>
         </div>
 
-        <div className="text-xs font-bold tracking-widest text-emerald-400 bg-emerald-950/40 px-4 py-2 rounded-lg border border-emerald-500/20 shadow-sm flex items-center gap-2">
-          <RiMagicLine size={14} className="animate-pulse" /> {allAssets.length} ARTIFACTS
+        <div className="text-xs font-bold tracking-widest text-emerald-500 bg-neutral-900 px-4 py-2 rounded-lg border border-neutral-800 shadow-sm flex items-center gap-2">
+          <RiDatabase2Line size={14} /> {allMedia.length} FILES
         </div>
       </div>
 
+      {/* Grid Layout */}
       <div className="flex-1 overflow-y-auto custom-scrollbar pr-2 min-h-0">
-        {allAssets.length === 0 ? (
+        {allMedia.length === 0 ? (
           <div className="h-full flex flex-col items-center justify-center text-neutral-600 gap-5">
             <div className="w-24 h-24 rounded-full bg-neutral-900 flex items-center justify-center border border-neutral-800 shadow-inner">
               <RiImage2Line size={40} className="opacity-20" />
             </div>
-            <p className="text-sm font-bold tracking-[0.3em] opacity-40 uppercase">
-              Vault is Empty
-            </p>
+            <p className="text-sm font-bold tracking-widest opacity-40 uppercase">No Media Found</p>
           </div>
         ) : (
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6 pb-12 auto-rows-max">
-            {visibleAssets.map((asset, index) => {
-              const isLast = index === visibleAssets.length - 1
-              const isVideo = asset.type === 'video'
+            {visibleMedia.map((media, index) => {
+              const isLast = index === visibleMedia.length - 1
+              const isVideo = media.type === 'video'
 
               return (
                 <motion.div
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: index * 0.05, duration: 0.4 }}
-                  key={`${asset.filename}-${index}`}
-                  ref={isLast ? lastAssetRef : null}
+                  key={`${media.filename}-${index}`}
+                  ref={isLast ? lastMediaRef : null}
                   onClick={() => {
                     setDirection(0)
-                    setSelectedAsset(asset)
+                    setSelectedMedia(media)
                   }}
-                  className="group relative aspect-square md:aspect-4/5 bg-neutral-900 rounded-2xl border border-white/5 overflow-hidden hover:border-emerald-500/50 hover:shadow-[0_10px_40px_-10px_rgba(16,185,129,0.3)] transition-all duration-500 cursor-pointer"
+                  className="group relative aspect-square md:aspect-[4/5] bg-neutral-900 rounded-2xl border border-white/5 overflow-hidden hover:border-emerald-500/50 hover:shadow-lg transition-all duration-300 cursor-pointer"
                 >
+                  {/* Thumbnail Rendering */}
                   {isVideo ? (
                     <video
-                      src={asset.url}
-                      className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110 opacity-60 group-hover:opacity-100 grayscale-30 group-hover:grayscale-0"
+                      src={media.url}
+                      className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105 opacity-80 group-hover:opacity-100"
                       preload="metadata"
                       muted
                       playsInline
                     />
                   ) : (
                     <img
-                      src={asset.url}
-                      alt={asset.displayName}
+                      src={media.url}
+                      alt={media.displayName}
                       loading="lazy"
                       onError={(e) => {
                         e.currentTarget.style.display = 'none'
                         e.currentTarget.nextElementSibling?.classList.remove('hidden')
                       }}
-                      className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110 opacity-60 group-hover:opacity-100 grayscale-30 group-hover:grayscale-0"
+                      className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105 opacity-80 group-hover:opacity-100"
                     />
                   )}
 
+                  {/* Fallback Error */}
                   <div className="hidden absolute inset-0 items-center justify-center flex-col gap-3 bg-neutral-950">
                     <RiFileWarningLine className="text-red-500/40" size={32} />
                     <span className="text-[10px] font-bold tracking-widest text-neutral-500">
-                      CORRUPT ARTIFACT
+                      CANNOT LOAD
                     </span>
                   </div>
 
+                  {/* Video Badge */}
                   {isVideo && (
-                    <div className="absolute top-3 left-3 bg-black/60 backdrop-blur-md px-2.5 py-1 rounded-md border border-white/10 flex items-center gap-1.5 z-10">
+                    <div className="absolute top-3 left-3 bg-black/70 backdrop-blur-md px-2.5 py-1 rounded-md border border-white/10 flex items-center gap-1.5 z-10">
                       <RiVideoLine size={12} className="text-emerald-400" />
-                      <span className="text-[9px] font-bold tracking-widest text-white">MP4</span>
+                      <span className="text-[10px] font-bold tracking-widest text-white">
+                        VIDEO
+                      </span>
                     </div>
                   )}
 
-                  <div className="absolute inset-0 bg-linear-to-t from-black via-black/40 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-300 flex flex-col justify-end p-5 translate-y-4 group-hover:translate-y-0">
-                    <div className="mb-4">
-                      <p className="text-xs text-white font-black mb-1 tracking-wider capitalize truncate">
-                        {asset.displayName}
+                  {/* Info Overlay */}
+                  <div className="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-300 flex flex-col justify-end p-4">
+                    <div className="mb-3">
+                      <p className="text-xs text-white font-bold mb-1 truncate">
+                        {media.displayName}
                       </p>
-                      <p className="text-[9px] text-emerald-400 font-mono uppercase tracking-widest">
-                        {new Date(asset.createdAt).toLocaleString()}
+                      <p className="text-[10px] text-neutral-400">
+                        {new Date(media.createdAt).toLocaleString()}
                       </p>
                     </div>
 
-                    <div className="flex gap-2 justify-end opacity-0 group-hover:opacity-100 transition-opacity delay-100">
+                    <div className="flex gap-2 justify-end">
                       <button
-                        onClick={(e) => openLocation(asset.path, e)}
-                        className="p-2.5 bg-white/10 text-white rounded-lg hover:bg-emerald-500 hover:text-black transition-colors backdrop-blur-md"
+                        onClick={(e) => openLocation(media.path, e)}
+                        className="p-2 bg-neutral-800 text-white rounded hover:bg-emerald-500 hover:text-black transition-colors"
                         title="Locate File"
                       >
                         <RiFolderOpenLine size={16} />
                       </button>
                       <button
-                        onClick={(e) => deleteAsset(asset.filename, e)}
-                        className="p-2.5 bg-white/10 text-white rounded-lg hover:bg-red-500 hover:text-white transition-colors backdrop-blur-md"
-                        title="Purge Artifact"
+                        onClick={(e) => deleteMedia(media.filename, e)}
+                        className="p-2 bg-neutral-800 text-white rounded hover:bg-red-500 hover:text-white transition-colors"
+                        title="Delete File"
                       >
                         <RiDeleteBinLine size={16} />
                       </button>
                     </div>
                   </div>
 
+                  {/* Play Icon */}
                   {isVideo && (
-                    <div className="absolute inset-0 flex items-center justify-center pointer-events-none opacity-50 group-hover:opacity-100 transition-opacity">
-                      <RiPlayCircleLine
-                        size={48}
-                        className="text-white drop-shadow-lg scale-90 group-hover:scale-100 transition-transform duration-500"
-                      />
+                    <div className="absolute inset-0 flex items-center justify-center pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity">
+                      <RiPlayCircleLine size={48} className="text-white drop-shadow-md" />
                     </div>
                   )}
                 </motion.div>
@@ -273,103 +277,108 @@ const GalleryView = () => {
         )}
       </div>
 
+      {/* Expanded Viewer Overlay */}
       <AnimatePresence>
-        {selectedAsset && (
+        {selectedMedia && (
           <motion.div
             initial={{ opacity: 0, backdropFilter: 'blur(0px)' }}
-            animate={{ opacity: 1, backdropFilter: 'blur(25px)' }}
+            animate={{ opacity: 1, backdropFilter: 'blur(20px)' }}
             exit={{ opacity: 0, backdropFilter: 'blur(0px)' }}
-            transition={{ duration: 0.4 }}
-            className="fixed inset-0 z-9999 bg-black/90 flex items-center justify-center"
+            transition={{ duration: 0.3 }}
+            className="fixed inset-0 z-[9999] bg-black/90 flex items-center justify-center"
           >
-            <div className="absolute top-0 left-0 right-0 p-6 flex justify-between items-center z-50 bg-linear-to-b from-black/80 to-transparent">
-              <div className="text-left px-5 py-2.5 bg-black/40 backdrop-blur-xl rounded-xl border border-white/5">
-                <h3 className="text-lg font-black text-white capitalize tracking-wide flex items-center gap-3">
-                  {selectedAsset.type === 'video' ? (
-                    <RiVideoLine className="text-emerald-400" />
+            {/* Top Bar */}
+            <div className="absolute top-0 left-0 right-0 p-6 flex justify-between items-center z-50">
+              <div className="text-left px-4 py-2 bg-neutral-900/60 backdrop-blur-md rounded-lg border border-white/10">
+                <h3 className="text-base font-bold text-white tracking-wide flex items-center gap-2">
+                  {selectedMedia.type === 'video' ? (
+                    <RiVideoLine className="text-emerald-500" />
                   ) : (
-                    <RiImage2Line className="text-emerald-400" />
+                    <RiImage2Line className="text-emerald-500" />
                   )}
-                  {selectedAsset.displayName}
+                  {selectedMedia.displayName}
                 </h3>
-                <p className="text-[10px] text-neutral-400 font-mono tracking-widest mt-1">
-                  {new Date(selectedAsset.createdAt).toLocaleString()} • {selectedAsset.filename}
+                <p className="text-[11px] text-neutral-400 mt-1">
+                  {new Date(selectedMedia.createdAt).toLocaleString()}
                 </p>
               </div>
 
               <button
-                onClick={() => setSelectedAsset(null)}
-                className="cursor-pointer p-4 bg-white/5 hover:bg-red-500 hover:text-white rounded-full text-neutral-400 transition-all border border-white/10"
+                onClick={() => setSelectedMedia(null)}
+                className="cursor-pointer p-3 bg-neutral-900 hover:bg-red-500 hover:text-white rounded-full text-neutral-400 transition-colors border border-white/10"
               >
                 <RiCloseLine size={24} />
               </button>
             </div>
 
+            {/* Arrow Nav */}
             <div
-              className="absolute left-0 top-0 bottom-0 w-32 z-40 flex items-center justify-start pl-8 group cursor-pointer hover:bg-linear-to-r hover:from-black/60 hover:to-transparent transition-colors"
-              onClick={() => navigateAsset(-1)}
+              className="absolute left-0 top-0 bottom-0 w-32 z-40 flex items-center justify-start pl-6 group cursor-pointer hover:bg-gradient-to-r from-black/40 to-transparent"
+              onClick={() => navigateMedia(-1)}
             >
-              <div className="p-5 bg-black/40 group-hover:bg-white text-white group-hover:text-black rounded-full transition-all border border-white/10 transform group-hover:-translate-x-2 backdrop-blur-md">
-                <RiArrowLeftSLine size={32} />
+              <div className="p-4 bg-neutral-900 group-hover:bg-white text-white group-hover:text-black rounded-full transition-colors border border-white/10">
+                <RiArrowLeftSLine size={28} />
               </div>
             </div>
 
             <div
-              className="absolute right-0 top-0 bottom-0 w-32 z-40 flex items-center justify-end pr-8 group cursor-pointer hover:bg-linear-to-l hover:from-black/60 hover:to-transparent transition-colors"
-              onClick={() => navigateAsset(1)}
+              className="absolute right-0 top-0 bottom-0 w-32 z-40 flex items-center justify-end pr-6 group cursor-pointer hover:bg-gradient-to-l from-black/40 to-transparent"
+              onClick={() => navigateMedia(1)}
             >
-              <div className="p-5 bg-black/40 group-hover:bg-white text-white group-hover:text-black rounded-full transition-all border border-white/10 transform group-hover:translate-x-2 backdrop-blur-md">
-                <RiArrowRightSLine size={32} />
+              <div className="p-4 bg-neutral-900 group-hover:bg-white text-white group-hover:text-black rounded-full transition-colors border border-white/10">
+                <RiArrowRightSLine size={28} />
               </div>
             </div>
 
-            <div className="relative w-full h-full flex flex-col items-center justify-center overflow-hidden pt-12 pb-24 px-32">
+            {/* Media Canvas */}
+            <div className="relative w-full h-full flex flex-col items-center justify-center pt-20 pb-28 px-32">
               <AnimatePresence initial={false} custom={direction} mode="wait">
                 <motion.div
-                  key={selectedAsset.filename}
+                  key={selectedMedia.filename}
                   custom={direction}
                   variants={variants}
                   initial="enter"
                   animate="center"
                   exit="exit"
-                  transition={{ type: 'spring', stiffness: 200, damping: 25 }}
+                  transition={{ type: 'spring', stiffness: 250, damping: 30 }}
                   className="relative w-full h-full flex items-center justify-center"
                 >
-                  {selectedAsset.type === 'video' ? (
+                  {selectedMedia.type === 'video' ? (
                     <video
-                      src={selectedAsset.url}
+                      src={selectedMedia.url}
                       controls
                       autoPlay
-                      className="max-w-full max-h-full rounded-xl shadow-[0_0_80px_rgba(0,0,0,0.9)] border border-white/10 outline-none ring-0 bg-black"
+                      className="max-w-full max-h-full rounded-lg shadow-2xl border border-white/10 bg-black outline-none"
                     />
                   ) : (
                     <img
-                      src={selectedAsset.url}
-                      className="max-w-full max-h-full rounded-xl shadow-[0_0_80px_rgba(0,0,0,0.9)] border border-white/10 object-contain bg-black"
+                      src={selectedMedia.url}
+                      className="max-w-full max-h-full rounded-lg shadow-2xl border border-white/10 object-contain bg-black"
                     />
                   )}
                 </motion.div>
               </AnimatePresence>
             </div>
 
-            <div className="absolute bottom-8 z-50 flex gap-4 p-2 bg-black/50 backdrop-blur-xl border border-white/10 rounded-2xl shadow-2xl">
+            {/* Bottom Actions */}
+            <div className="absolute bottom-8 z-50 flex gap-3 p-2 bg-neutral-900/80 backdrop-blur-md border border-white/10 rounded-xl">
               <button
-                onClick={(e) => openLocation(selectedAsset.path, e)}
-                className="cursor-pointer flex items-center gap-2 px-6 py-3 bg-white/5 hover:bg-white text-white hover:text-black rounded-xl text-xs font-bold tracking-widest transition-all"
+                onClick={(e) => openLocation(selectedMedia.path, e)}
+                className="cursor-pointer flex items-center gap-2 px-5 py-2.5 hover:bg-white text-white hover:text-black rounded-lg text-xs font-bold tracking-wide transition-colors"
               >
-                <RiFolderOpenLine size={18} /> LOCATE
+                <RiFolderOpenLine size={16} /> Locate
               </button>
               <button
-                onClick={(e) => saveCopy(selectedAsset.path, e)}
-                className="cursor-pointer flex items-center gap-2 px-6 py-3 bg-emerald-500/20 hover:bg-emerald-500 text-emerald-400 hover:text-black rounded-xl text-xs font-bold tracking-widest transition-all border border-emerald-500/20"
+                onClick={(e) => saveCopy(selectedMedia.path, e)}
+                className="cursor-pointer flex items-center gap-2 px-5 py-2.5 bg-emerald-500/20 hover:bg-emerald-500 text-emerald-400 hover:text-black rounded-lg text-xs font-bold tracking-wide transition-colors border border-emerald-500/20"
               >
-                <RiDownloadLine size={18} /> EXPORT
+                <RiDownloadLine size={16} /> Export
               </button>
               <button
-                onClick={(e) => deleteAsset(selectedAsset.filename, e)}
-                className="cursor-pointer flex items-center gap-2 px-6 py-3 bg-red-500/10 hover:bg-red-500 text-red-500 hover:text-white rounded-xl text-xs font-bold tracking-widest transition-all border border-red-500/20"
+                onClick={(e) => deleteMedia(selectedMedia.filename, e)}
+                className="cursor-pointer flex items-center gap-2 px-5 py-2.5 bg-red-500/10 hover:bg-red-500 text-red-500 hover:text-white rounded-lg text-xs font-bold tracking-wide transition-colors border border-red-500/20"
               >
-                <RiDeleteBinLine size={18} /> PURGE
+                <RiDeleteBinLine size={16} /> Delete
               </button>
             </div>
           </motion.div>
