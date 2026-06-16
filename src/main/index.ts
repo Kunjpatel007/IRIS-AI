@@ -254,12 +254,12 @@ app.whenReady().then(() => {
         if (data.groq) groqKey = safeStorage.decryptString(Buffer.from(data.groq, 'base64'))
         if (data.gemini) geminiKey = safeStorage.decryptString(Buffer.from(data.gemini, 'base64'))
         if (data.hf) hfKey = safeStorage.decryptString(Buffer.from(data.hf, 'base64'))
-        if (data.tavily) tavilyKey = safeStorage.decryptString(Buffer.from(data.tavily, 'base64')) // FIXED TYPO HERE
+        if (data.tavily) tavilyKey = safeStorage.decryptString(Buffer.from(data.tavily, 'base64'))
       } else {
         if (data.groq) groqKey = Buffer.from(data.groq, 'base64').toString('utf8')
         if (data.gemini) geminiKey = Buffer.from(data.gemini, 'base64').toString('utf8')
         if (data.hf) hfKey = Buffer.from(data.hf, 'base64').toString('utf8')
-        if (data.tavily) tavilyKey = Buffer.from(data.tavily, 'base64').toString('utf8') // FIXED TYPO HERE
+        if (data.tavily) tavilyKey = Buffer.from(data.tavily, 'base64').toString('utf8') 
       }
 
       return { groqKey, geminiKey, hfKey, tavilyKey }
