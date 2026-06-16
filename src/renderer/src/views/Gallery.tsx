@@ -287,7 +287,7 @@ const GalleryView = () => {
             animate={{ opacity: 1, backdropFilter: 'blur(20px)' }}
             exit={{ opacity: 0, backdropFilter: 'blur(0px)' }}
             transition={{ duration: 0.3 }}
-            className="fixed inset-0 z-[9999] bg-black/90 flex items-center justify-center"
+            className="fixed inset-0 z-9999 bg-black/90 flex items-center justify-center"
           >
             <div className="absolute top-0 left-0 right-0 p-6 flex justify-between items-center z-50">
               <div className="text-left px-4 py-2 bg-neutral-900/60 backdrop-blur-md rounded-lg border border-white/10">
