@@ -56,7 +56,6 @@ if (process.contextIsolated) {
     contextBridge.exposeInMainWorld('irisAgent', {
       startResearch: (query: string) => ipcRenderer.invoke('trigger-deep-research', { query }),
 
-      // Progress & Completion listeners
       onProgress: (callback: (payload: any) => void) => {
         const subscription = (_event: any, payload: any) => callback(payload)
         ipcRenderer.on('oracle-progress', subscription)
