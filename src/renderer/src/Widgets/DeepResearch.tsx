@@ -1,6 +1,3 @@
-// ==========================================
-// 1. FIXED WIDGET COMPONENT (React + Framer)
-// ==========================================
 import { useEffect, useState, useRef } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import gsap from 'gsap'
@@ -22,79 +19,81 @@ export default function ResearchWidget() {
 
   const { contextSafe } = useGSAP({ scope: containerRef })
 
-  const handleStart = contextSafe((e: any) => {
-    setQuery(e.detail.query)
-    setIsSuccess(null)
-    setSummary('')
-    setIsOpen(true)
-    setStatusText('Booting Deep Search Node...')
-    if (progressRef.current) gsap.to(progressRef.current, { width: '5%', duration: 0.5 })
-  })
+  useEffect(() => {
+    if (!window.electron?.ipcRenderer) return
 
-  const handleProgress = contextSafe(
-    (_event: any, data: { status: string; file: string; totalFound: number }) => {
+    const handleStart = (_event: any, data: { query: string }) => {
+      setQuery(data.query)
+      setIsSuccess(null)
+      setSummary('')
+      setIsOpen(true)
+      setStatusText('Booting Deep Search Node...')
+      if (progressRef.current) gsap.to(progressRef.current, { width: '5%', duration: 0.5 })
+    }
+
+    const handleProgress = contextSafe(
+      (_event: any, data: { status: string; file: string; totalFound: number }) => {
+        if (textRef.current) {
+          gsap.to(textRef.current, {
+            y: -10,
+            opacity: 0,
+            duration: 0.2,
+            onComplete: () => {
+              setStatusText(data.file)
+              gsap.to(textRef.current, { y: 0, opacity: 1, duration: 0.3, ease: 'power2.out' })
+            }
+          })
+        }
+        if (progressRef.current) {
+          const percentage = data.totalFound === 1 ? '35%' : data.totalFound === 2 ? '70%' : '90%'
+          gsap.to(progressRef.current, { width: percentage, duration: 1.2, ease: 'expo.out' })
+        }
+      }
+    )
+
+    const handleDone = contextSafe((_event: any, data: { success: boolean; summary?: string }) => {
+      const success = data.success
+      setIsSuccess(success)
+
+      if (success && data.summary) {
+        setSummary(data.summary)
+      }
+
       if (textRef.current) {
         gsap.to(textRef.current, {
-          y: -10,
           opacity: 0,
+          y: -10,
           duration: 0.2,
           onComplete: () => {
-            setStatusText(data.file)
-            gsap.to(textRef.current, { y: 0, opacity: 1, duration: 0.3, ease: 'power2.out' })
+            setStatusText(success ? 'RAG Pipeline Complete & Synthesized.' : 'Pipeline Terminated.')
+            gsap.to(textRef.current, { opacity: 1, y: 0, duration: 0.3 })
           }
         })
       }
+
       if (progressRef.current) {
-        const percentage = data.totalFound === 1 ? '35%' : data.totalFound === 2 ? '70%' : '90%'
-        gsap.to(progressRef.current, { width: percentage, duration: 1.2, ease: 'expo.out' })
+        gsap.to(progressRef.current, {
+          width: '100%',
+          backgroundColor: success ? '#10b981' : '#ef4444',
+          duration: 0.6,
+          ease: 'power3.out'
+        })
       }
-    }
-  )
 
-  const handleDone = contextSafe((e: any) => {
-    const success = e.detail.success
-    setIsSuccess(success)
+      // Close the widget after 8 seconds so user can read the results
+      setTimeout(() => setIsOpen(false), 8000)
+    })
 
-    if (success && e.detail.summary) {
-      setSummary(e.detail.summary)
-      // Removed broken synchronous GSAP DOM selector check here
-    }
-
-    if (textRef.current) {
-      gsap.to(textRef.current, {
-        opacity: 0,
-        y: -10,
-        duration: 0.2,
-        onComplete: () => {
-          setStatusText(success ? 'RAG Pipeline Complete & Synthesized.' : 'Pipeline Terminated.')
-          gsap.to(textRef.current, { opacity: 1, y: 0, duration: 0.3 })
-        }
-      })
-    }
-
-    if (progressRef.current) {
-      gsap.to(progressRef.current, {
-        width: '100%',
-        backgroundColor: success ? '#10b981' : '#ef4444',
-        duration: 0.6,
-        ease: 'power3.out'
-      })
-    }
-
-    setTimeout(() => setIsOpen(false), 8000) // Increased slightly to let user read markdown
-  })
-
-  useEffect(() => {
-    window.addEventListener('deep-research-start', handleStart)
-    window.addEventListener('deep-research-done', handleDone)
+    window.electron.ipcRenderer.on('deep-research-start', handleStart)
+    window.electron.ipcRenderer.on('deep-research-done', handleDone)
     window.electron.ipcRenderer.on('oracle-progress', handleProgress)
 
     return () => {
-      window.removeEventListener('deep-research-start', handleStart)
-      window.removeEventListener('deep-research-done', handleDone)
-      window.electron.ipcRenderer.removeAllListeners('oracle-progress')
+      window.electron.ipcRenderer.removeListener('deep-research-start', handleStart)
+      window.electron.ipcRenderer.removeListener('deep-research-done', handleDone)
+      window.electron.ipcRenderer.removeListener('oracle-progress', handleProgress)
     }
-  }, [handleStart, handleProgress, handleDone])
+  }, [contextSafe])
 
   return (
     <AnimatePresence>
@@ -105,7 +104,7 @@ export default function ResearchWidget() {
           animate={{ opacity: 1, scale: 1, filter: 'blur(0px)' }}
           exit={{ opacity: 0, scale: 0.95, filter: 'blur(10px)' }}
           transition={{ type: 'spring', stiffness: 300, damping: 25 }}
-          className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-175 min-h-75 bg-black/60 backdrop-blur-3xl border border-white/10 rounded-2xl p-8 shadow-[0_0_80px_rgba(0,0,0,0.9)] z-50 text-white font-sans overflow-hidden flex flex-col justify-center"
+          className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] min-h-[300px] bg-black/60 backdrop-blur-3xl border border-white/10 rounded-2xl p-8 shadow-[0_0_80px_rgba(0,0,0,0.9)] z-[9999] text-white font-sans overflow-hidden flex flex-col justify-center"
         >
           <div className="flex items-center justify-between mb-6 border-b border-white/10 pb-4 relative z-10">
             <div className="flex items-center gap-3">
@@ -151,7 +150,6 @@ export default function ResearchWidget() {
             />
           </div>
 
-          {/* Framer Motion handles the dynamic mounting animation cleanly here */}
           <AnimatePresence>
             {summary && (
               <motion.div
@@ -159,12 +157,14 @@ export default function ResearchWidget() {
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -10 }}
                 transition={{ duration: 0.4, ease: 'easeOut' }}
-                className="mt-4 p-4 bg-emerald-950/20 border border-emerald-500/20 rounded-lg relative z-10 max-h-37.5 overflow-y-auto"
+                className="mt-4 p-4 bg-emerald-950/20 border border-emerald-500/20 rounded-lg relative z-10 max-h-[150px] overflow-y-auto custom-scrollbar"
               >
                 <p className="text-[10px] text-emerald-400/80 uppercase tracking-widest mb-2 font-bold">
                   Data Extracted
                 </p>
-                <p className="text-xs text-gray-300 font-mono leading-relaxed">{summary}</p>
+                <p className="text-xs text-gray-300 font-mono leading-relaxed whitespace-pre-wrap">
+                  {summary}
+                </p>
               </motion.div>
             )}
           </AnimatePresence>
