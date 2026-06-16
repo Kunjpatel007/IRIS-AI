@@ -193,9 +193,9 @@ const GalleryView = () => {
                   className="group relative aspect-square md:aspect-[4/5] bg-neutral-900 rounded-2xl border border-white/5 overflow-hidden hover:border-emerald-500/50 hover:shadow-lg transition-all duration-300 cursor-pointer"
                 >
                   {isVideo ? (
-                    // 🚨 THE FIX: Appended #t=0.001 to force thumbnail render, added hover play
                     <video
-                      src={`${media.url}#t=0.001`}
+                      // 🚨 THE FIX: Use a custom scheme or ensure the URL is purely formatted for Electron
+                      src={media.url}
                       className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105 opacity-80 group-hover:opacity-100"
                       preload="metadata"
                       muted
@@ -206,9 +206,11 @@ const GalleryView = () => {
                       }}
                       onMouseLeave={(e) => {
                         e.currentTarget.pause()
-                        e.currentTarget.currentTime = 0.001
+                        e.currentTarget.currentTime = 0
                       }}
-                    />
+                    >
+                      <source src={media.url} type="video/mp4" />
+                    </video>
                   ) : (
                     <img
                       src={media.url}
